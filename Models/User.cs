@@ -64,5 +64,15 @@ namespace HMC_Project.Models
 
         public DateTime CreatedOn = DateTime.UtcNow;
         public DateTime DateOfBirth { get { return DateOfBirth.Date; } set { DateOfBirth = value.Date; } }
+        public virtual ICollection<UserAddress> UserAddresses { get; set; }
+        public User(string name, string surname, string username, string password, string email)
+        {
+            Name = name;
+            Surname = surname;
+            UserName = username;
+            Password = password;
+            Email = email;
+            UserAddresses = new HashSet<UserAddress>();
+        }
     }
 }

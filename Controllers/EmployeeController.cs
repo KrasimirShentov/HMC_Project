@@ -4,19 +4,21 @@ using Microsoft.AspNetCore.Mvc;
 namespace HMC_Project.Controllers
 {
     public class EmployeeController : Controller
-    { 
+    {
+        [HttpGet]
         public ActionResult GetByID()
         {
             return View();
         }
-        
-        public ActionResult GetAll(int id)
+
+        [HttpGet]
+        public ActionResult GetAll()
         {
             return View();
         }
         
         [HttpPost]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create()
         {
             try
             {
@@ -28,8 +30,8 @@ namespace HMC_Project.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpPut]
+        public ActionResult Edit()
         {
             try
             {
@@ -41,8 +43,8 @@ namespace HMC_Project.Controllers
             }
         }
         
-        [HttpPost]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpDelete ]
+        public ActionResult Delete()
         {
             try
             {

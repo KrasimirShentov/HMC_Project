@@ -3,20 +3,35 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMC_Project.Controllers
 {
-    public class HomeController : Controller
+    public class DepartmentController : Controller
     {
+        [HttpGet]
         public ActionResult GetByID()
         {
             return View();
         }
 
-        public ActionResult GetAll(int id)
+        [HttpGet]
+        public ActionResult GetAll()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create()
+        {
+            try
+            {
+                return RedirectToAction();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        [HttpPut]
+        public ActionResult Update()
         {
             try
             {
@@ -28,21 +43,8 @@ namespace HMC_Project.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        [HttpPost]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpDelete]
+        public ActionResult Delete()
         {
             try
             {

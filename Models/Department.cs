@@ -19,7 +19,8 @@
                 throw new ArgumentNullException("Name can't be null of empty");
             }
         }
-        public string Description {
+        public string Description
+        {
             get { return _description; }
             set
             {
@@ -30,7 +31,8 @@
                 throw new ArgumentNullException("Description can't be null or empty");
             }
         }
-        public string Type {
+        public string Type
+        {
             get { return _Type; }
             set
             {
@@ -41,7 +43,8 @@
                 throw new ArgumentNullException("Type can't be null or empty");
             }
         }
-        public string Email {
+        public string Email
+        {
             get { return _email; }
             set
             {
@@ -52,13 +55,20 @@
                 throw new ArgumentNullException("Email can't be null or empty");
             }
         }
-        public Department(string name, string description, string type, string email)
+
+        public string PhoneNumber { get; set; }
+        public List<Employee> employees { get; set; }
+        public virtual ICollection<DepartmentAddress> DepartmentAddresses { get; private set; }
+        public Department(string name, string description, string type, string email, string phoneNumber)
         {
             Id = Guid.NewGuid();
             Name = name;
             Description = description;
             Type = type;
             Email = email;
+            PhoneNumber = phoneNumber;
+            DepartmentAddresses = new HashSet<DepartmentAddress>();
+            employees = new List<Employee>();
         }
     }
 }

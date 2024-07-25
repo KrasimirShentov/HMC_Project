@@ -46,12 +46,13 @@ namespace HMC_Project.Models
             }
         }
         public string Position { get; set; }
+        public GenderType Gender { get; set; }
         public Training Training { get; set; }
-        public GenderType Gender {  get; set; }
+        public Department Department { get; set; }
         public DateTime Birthday { get; set; }
         public DateTime HireDate { get; set; }
-
-        public Employee(string name, string surname, int age, string email, string position, Training training)
+        public virtual ICollection<EmployeeAddress> EmployeeAddresses{ get; set; }
+        public Employee(string name, string surname, int age, string email, string position, Training training, Department department)
         {
             ID = Guid.NewGuid();
             Name = name;
@@ -60,6 +61,8 @@ namespace HMC_Project.Models
             Email = email;
             Position = position;
             Training = training;
+            Department = department;
+            EmployeeAddresses = new HashSet<EmployeeAddress>();
         }
     }
 }
