@@ -55,13 +55,16 @@
                 throw new ArgumentNullException("Email can't be null or empty");
             }
         }
-
         public string PhoneNumber { get; set; }
         public List<Employee> employees { get; set; }
         public virtual ICollection<DepartmentAddress> DepartmentAddresses { get; private set; }
-        public Department(string name, string description, string type, string email, string phoneNumber)
+        public Department()
         {
-            Id = Guid.NewGuid();
+                
+        }
+        public Department(Guid ID,string name, string description, string type, string email, string phoneNumber)
+        {
+            Id = ID;
             Name = name;
             Description = description;
             Type = type;

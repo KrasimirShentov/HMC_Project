@@ -52,9 +52,9 @@ namespace HMC_Project.Models
         public DateTime Birthday { get; set; }
         public DateTime HireDate { get; set; }
         public virtual ICollection<EmployeeAddress> EmployeeAddresses{ get; set; }
-        public Employee(string name, string surname, int age, string email, string position, Training training, Department department)
+        public Employee(Guid Id,string name, string surname, int age, string email, string position, Training training, Department department)
         {
-            ID = Guid.NewGuid();
+            ID = Id;
             Name = name;
             Surname = surname;
             Age = age;

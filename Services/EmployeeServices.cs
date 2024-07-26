@@ -1,29 +1,101 @@
 ﻿using HMC_Project.Interfaces.IRepositories;
 using HMC_Project.Models;
+using HMC_Project.Requests;
 
 namespace HMC_Project.Services
 {
     public class EmployeeServices : IEmployeeInterface
     {
-        public Task<Employee> GetByIDAsync(int EmployeeID)
+        private readonly IEmployeeInterface _employeeRepository;
+        private readonly HMCDbContext _dbContext;
+
+        public EmployeeServices(IEmployeeInterface employeeRepository, HMCDbContext dbContext)
         {
-            throw new NotImplementedException();
+            _employeeRepository = employeeRepository;
+            _dbContext = dbContext;
         }
-        public Task<IEnumerable<Employee>> GetAllAsync()
+
+        public async Task<Employee> GetByIDAsync(Guid employeeId)
         {
-            throw new NotImplementedException();
+            var result = await _employeeRepository.GetByIDAsync(employeeId);
+
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+            return result;
         }
-        public Task<Employee> CreateAsync(Employee employee)
+
+        public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _employeeRepository.GetAllAsync();
         }
-        public Task UpdateAsync(Employee employee)
+
+        public async Task<Employee> CreateAsync(EmployeeRequest employeeRequest)
         {
-            throw new NotImplementedException();
+            var result = await _employeeRepository.GetByIDAsync(employeeRequest.ID);
+
+            if (result != null)
+            {
+                throw new ArgumentException("An employee with this ID already exists.");
+            }
+
+            var newEmployee = MapRequestToEmployee(employeeRequest);
+            _dbContext.Add(newEmployee);
+            await _dbContext.SaveChangesAsync();
+
+            return newEmployee;
         }
-        public Task DeleteAsync(Employee employee)
+
+        public async Task UpdateAsync(Employee employee)
         {
-            throw new NotImplementedException();
+            var existingEmployee = await _employeeRepository.GetByIDAsync(employee.ID);
+            if (existingEmployee == null)
+            {
+                throw new ArgumentException("Employee not found.");
+            }
+
+            existingEmployee.Name = employee.Name;
+            existingEmployee.Surname = employee.Surname;
+            existingEmployee.Age = employee.Age;
+            existingEmployee.Email = employee.Email;
+            existingEmployee.Position = employee.Position;
+            existingEmployee.Gender = employee.Gender;
+            existingEmployee.Training = employee.Training;
+            existingEmployee.Department = employee.Department;
+            existingEmployee.Birthday = employee.Birthday;
+            existingEmployee.HireDate = employee.HireDate;
+
+            _dbContext.Update(existingEmployee);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Employee employee)
+        {
+            var existingEmployee = await _employeeRepository.GetByIDAsync(employee.ID);
+            if (existingEmployee == null)
+            {
+                throw new ArgumentException("Employee not found.");
+            }
+
+            _dbContext.Remove(existingEmployee);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private Employee MapRequestToEmployee(EmployeeRequest employeeRequest)
+        {
+            return new Employee(
+                employeeRequest.ID != Guid.Empty ? employeeRequest.ID : Guid.NewGuid(),
+                employeeRequest.Name,
+                employeeRequest.Surname,
+                employeeRequest.Age,
+                employeeRequest.Email,
+                employeeRequest.Position,
+                employeeRequest.Training,
+                employeeRequest.Department)
+            {
+                Gender = employeeRequest.Gender
+            };
         }
     }
 }

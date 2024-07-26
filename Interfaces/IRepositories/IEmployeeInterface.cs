@@ -1,12 +1,13 @@
 ﻿using HMC_Project.Models;
+using HMC_Project.Requests;
 
 namespace HMC_Project.Interfaces.IRepositories
 {
     public interface IEmployeeInterface
     {
-        Task<Employee> GetByIDAsync(int EmployeeID);
+        Task<Employee> GetByIDAsync(Guid EmployeeID);
         Task<IEnumerable<Employee>> GetAllAsync();
-        Task<Employee> CreateAsync(Employee employee);
+        Task<Employee> CreateAsync(EmployeeRequest employeeRequest);
         Task UpdateAsync(Employee employee);
         Task DeleteAsync(Employee employee);
     }

@@ -1,11 +1,12 @@
 ﻿using HMC_Project.Interfaces.IRepositories;
 using HMC_Project.Models;
+using HMC_Project.Requests;
 
 namespace HMC_Project.Repositories
 {
     public class EmployeeReposity : IEmployeeInterface
     {
-        public Task<Employee> GetByIDAsync(int EmployeeID)
+        public Task<Employee> GetByIDAsync(Guid EmployeeID)
         {
             throw new NotImplementedException();
         }
@@ -13,7 +14,7 @@ namespace HMC_Project.Repositories
         {
             throw new NotImplementedException();
         }
-        public Task<Employee> CreateAsync(Employee employee)
+        public Task<Employee> CreateAsync(EmployeeRequest employee)
         {
             throw new NotImplementedException();
         }

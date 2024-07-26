@@ -1,11 +1,12 @@
 ﻿using HMC_Project.Interfaces.IRepositories;
 using HMC_Project.Models;
+using HMC_Project.Requests;
 
 namespace HMC_Project.Repositories
 {
     public class DepartmentRepository : IDepartmentInterface
     {
-        public Task<Department> GetByIDAsync(int DepartmentID)
+        public Task<Department> GetByIDAsync(Guid DepartmentID)
         {
             throw new NotImplementedException();
         }
@@ -13,7 +14,7 @@ namespace HMC_Project.Repositories
         {
             throw new NotImplementedException();
         }
-        public Task<Department> CreateAsync(Department department)
+        public Task<Department> CreateAsync (DepartmentRequest departmentRequest)
         {
             throw new NotImplementedException();
         }

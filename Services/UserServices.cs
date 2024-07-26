@@ -1,11 +1,12 @@
 ﻿using HMC_Project.Interfaces.IRepositories;
 using HMC_Project.Models;
+using HMC_Project.Requests;
 
 namespace HMC_Project.Services
 {
     public class UserServices : IUserInterface
     {
-        public Task<User> GetByIDAsync(int UserID)
+        public Task<User> GetByIDAsync(Guid UserID)
         {
             throw new NotImplementedException();
         }
@@ -17,7 +18,7 @@ namespace HMC_Project.Services
         {
             throw new NotImplementedException();
         }
-        public Task<User> CreateAsync(User user)
+        public Task<User> CreateAsync(UserRequest userRequest)
         {
             throw new NotImplementedException();
         }
