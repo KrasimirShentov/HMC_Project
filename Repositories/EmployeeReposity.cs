@@ -1,30 +1,42 @@
-﻿using HMC_Project.Interfaces.IRepositories;
+﻿using HMC_Project.Interfaces.Repos;
+using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
+using Microsoft.EntityFrameworkCore;
 
 namespace HMC_Project.Repositories
 {
-    public class EmployeeReposity : IEmployeeInterface
+    public class EmployeeReposity : IRepEmployeeintefaces
     {
-        public Task<Employee> GetByIDAsync(Guid EmployeeID)
+        private readonly HMCDbContext _dbContext;
+        public EmployeeReposity(HMCDbContext hMCDbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = hMCDbContext;
         }
-        public Task<IEnumerable<Employee>> GetAllAsync()
+        public async Task<Employee> GetByIDAsync(Guid EmployeeID)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Employees.FindAsync(EmployeeID);
         }
-        public Task<Employee> CreateAsync(EmployeeRequest employee)
+        public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Employees.ToListAsync();
         }
-        public Task UpdateAsync(Employee employee)
+        public async Task<Employee> CreateAsync(Employee employee)
         {
-            throw new NotImplementedException();
+            _dbContext.Employees.Add(employee);
+            _dbContext.SaveChangesAsync();
+            return employee;
         }
-        public Task DeleteAsync(Employee employee)
+        public async Task UpdateAsync(Employee employee)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(employee).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+
+        }
+        public async Task DeleteAsync(Employee employee)
+        {
+            _dbContext.Employees.Remove(employee);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

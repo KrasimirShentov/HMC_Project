@@ -1,4 +1,4 @@
-﻿using HMC_Project.Interfaces.IRepositories;
+﻿using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
 
@@ -9,9 +9,10 @@ namespace HMC_Project.Services
         private readonly IDepartmentInterface _department;
         private HMCDbContext _dbContext;
 
-        public DepartmentServices(IDepartmentInterface departmentInterface)
+        public DepartmentServices(IDepartmentInterface departmentInterface, HMCDbContext hMCDbContext)
         {
             _department = departmentInterface;
+            _dbContext = hMCDbContext;
         }
         public async Task<Department> GetByIDAsync(Guid DepartmentID)
         {

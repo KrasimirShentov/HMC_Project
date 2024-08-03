@@ -1,36 +1,47 @@
-﻿using HMC_Project.Interfaces.IRepositories;
+﻿using HMC_Project.Interfaces.Repos;
+using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace HMC_Project.Repositories
 {
-    public class UserRepository : IUserInterface
+    public class UserRepository : IRepUserInterface
     {
-        public Task<User> GetByIDAsync(Guid UserID)
+        private readonly HMCDbContext _dbContext;
+        public UserRepository(HMCDbContext hMCDbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = hMCDbContext;
         }
-        public Task<IEnumerable<User>> GetAllAsync()
+        public async Task<User> GetByIDAsync(Guid UserID)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Users.FindAsync(UserID);
         }
-        public Task<User> GetUserAsync(string username)
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Users.ToListAsync();
         }
-        public Task<User> CreateAsync(UserRequest userRequest)
+        public async Task<User> GetUserAsync(string username)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Users.FindAsync(username);
+        }
+        public async Task<User> CreateAsync(User user)
+        {
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+            return user;
         }
 
-        public Task UpdateAsync(User user)
+        public async Task UpdateAsync(User user)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(user).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
         }
-        public Task DeleteAsync(User user)
+        public async Task DeleteAsync(User user)
         {
-            throw new NotImplementedException();
+            _dbContext.Users.Remove(user);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

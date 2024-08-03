@@ -1,4 +1,4 @@
-﻿using HMC_Project.Interfaces.IRepositories;
+﻿using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
 
@@ -90,9 +90,7 @@ namespace HMC_Project.Services
                 employeeRequest.Surname,
                 employeeRequest.Age,
                 employeeRequest.Email,
-                employeeRequest.Position,
-                employeeRequest.Training,
-                employeeRequest.Department)
+                employeeRequest.Position)
             {
                 Gender = employeeRequest.Gender
             };

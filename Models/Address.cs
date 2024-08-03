@@ -1,9 +1,12 @@
-﻿namespace HMC_Project.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HMC_Project.Models
 {
     public class Address
     {
         private string _address;
 
+        [Key]
         public Guid ID { get; private set; }
         public string AddressName
         {

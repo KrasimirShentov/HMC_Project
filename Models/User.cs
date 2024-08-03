@@ -1,5 +1,7 @@
 ﻿using HMC_Project.Models.Enums;
-using System.Diagnostics.CodeAnalysis;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace HMC_Project.Models
 {
@@ -13,31 +15,54 @@ namespace HMC_Project.Models
 
         public Guid ID { get; private set; }
 
-        public string Name { get { return _name; } set
+        public string Name
+        {
+            get { return _name; }
+            set
             {
                 if (!string.IsNullOrEmpty(value))
                 {
                     _name = value;
                 }
-                throw new ArgumentNullException("Name can't be null or empty");
+                else
+                {
+                    throw new ArgumentNullException("Name can't be null or empty");
+                }
             }
         }
-        public string Surname { get { return _surname; } set
+
+        public string Surname
+        {
+            get { return _surname; }
+            set
             {
                 if (!string.IsNullOrEmpty(value))
                 {
                     _surname = value;
                 }
-                throw new ArgumentNullException("Surname can't be null or empty");
+                else
+                {
+                    throw new ArgumentNullException("Surname can't be null or empty");
+                }
             }
         }
-        public string UserName { get { return _username; } set {
+
+        public string UserName
+        {
+            get { return _username; }
+            set
+            {
                 if (!string.IsNullOrEmpty(value))
                 {
                     _username = value;
                 }
-                throw new ArgumentNullException("Username can't be null or empty");
-            } }
+                else
+                {
+                    throw new ArgumentNullException("Username can't be null or empty");
+                }
+            }
+        }
+
         public string Password
         {
             get { return _password; }
@@ -47,8 +72,13 @@ namespace HMC_Project.Models
                 {
                     _password = value;
                 }
-                throw new ArgumentNullException("Password can't be null or empty");
-            } }
+                else
+                {
+                    throw new ArgumentNullException("Password can't be null or empty");
+                }
+            }
+        }
+
         public string Email
         {
             get { return _email; }
@@ -58,16 +88,27 @@ namespace HMC_Project.Models
                 {
                     _email = value;
                 }
-                throw new ArgumentNullException("Email can't be null or empty");
-            } }
+                else
+                {
+                    throw new ArgumentNullException("Email can't be null or empty");
+                }
+            }
+        }
+
         public GenderType Gender { get; set; }
 
-        public DateTime CreatedOn = DateTime.UtcNow;
-        public DateTime DateOfBirth { get { return DateOfBirth.Date; } set { DateOfBirth = value.Date; } }
+        public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
+        public DateTime DateOfBirth{get; set;}
+
         public virtual ICollection<UserAddress> UserAddresses { get; set; }
-        public User(Guid Id,string name, string surname, string username, string password, string email)
+        public User()
         {
-            ID = Id;
+            UserAddresses = new HashSet<UserAddress>();
+        }
+
+        public User(Guid id, string name, string surname, string username, string password, string email)
+        {
+            ID = id;
             Name = name;
             Surname = surname;
             UserName = username;

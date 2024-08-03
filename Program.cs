@@ -1,13 +1,19 @@
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using HMC_Project.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.json");
+
 var services = builder.Services;
+
+services.AddDbContext<HMCDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("HMC")));
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
-
-builder.Services.AddAuthentication();
 
 services.AddSwaggerGen(c =>
 {
@@ -31,5 +37,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();

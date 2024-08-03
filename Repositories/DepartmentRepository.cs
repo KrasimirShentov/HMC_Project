@@ -1,30 +1,42 @@
-﻿using HMC_Project.Interfaces.IRepositories;
+﻿using HMC_Project.Interfaces.Repos;
+using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace HMC_Project.Repositories
 {
-    public class DepartmentRepository : IDepartmentInterface
+    public class DepartmentRepository : IRepDepartmentInterfaces
     {
-        public Task<Department> GetByIDAsync(Guid DepartmentID)
+        private readonly HMCDbContext _dbContext;
+        public DepartmentRepository(HMCDbContext hMCDbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = hMCDbContext;
         }
-        public Task<IEnumerable<Department>> GetAllAsync()
+        public async Task<Department> GetByIDAsync(Guid DepartmentID)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Departments.FindAsync(DepartmentID);
         }
-        public Task<Department> CreateAsync (DepartmentRequest departmentRequest)
+        public async Task<IEnumerable<Department>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Departments.ToListAsync();
         }
-        public Task UpdateAsync(Department department)
+        public async Task<Department> CreateAsync (Department department)
         {
-            throw new NotImplementedException();
+            _dbContext.Add(department);
+            _dbContext.SaveChangesAsync();
+            return department;
         }
-        public Task DeleteAsync(Department department)
+        public async Task UpdateAsync(Department department)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(department).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+        }
+        public async Task DeleteAsync(Department department)
+        {
+            _dbContext.Departments.Remove(department);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
