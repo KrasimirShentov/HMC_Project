@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMC_Project.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class EmployeeController : Controller
     {
-        [HttpGet]
+        [HttpGet("{ID}")]
         public ActionResult GetByID()
         {
             return View();

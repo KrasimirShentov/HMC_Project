@@ -1,4 +1,5 @@
-﻿using HMC_Project.Interfaces.Services;
+﻿using HMC_Project.Interfaces.Repos;
+using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
 
@@ -6,18 +7,18 @@ namespace HMC_Project.Services
 {
     public class EmployeeServices : IEmployeeInterface
     {
-        private readonly IEmployeeInterface _employeeRepository;
+        private readonly IRepEmployeeintefaces _employeeRepo;
         private readonly HMCDbContext _dbContext;
 
-        public EmployeeServices(IEmployeeInterface employeeRepository, HMCDbContext dbContext)
+        public EmployeeServices(IRepEmployeeintefaces employeeRepo, HMCDbContext dbContext)
         {
-            _employeeRepository = employeeRepository;
+            _employeeRepo = employeeRepo;
             _dbContext = dbContext;
         }
 
         public async Task<Employee> GetByIDAsync(Guid employeeId)
         {
-            var result = await _employeeRepository.GetByIDAsync(employeeId);
+            var result = await _employeeRepo.GetByIDAsync(employeeId);
 
             if (result == null)
             {
@@ -28,12 +29,12 @@ namespace HMC_Project.Services
 
         public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            return await _employeeRepository.GetAllAsync();
+            return await _employeeRepo.GetAllAsync();
         }
 
         public async Task<Employee> CreateAsync(EmployeeRequest employeeRequest)
         {
-            var result = await _employeeRepository.GetByIDAsync(employeeRequest.ID);
+            var result = await _employeeRepo.GetByIDAsync(employeeRequest.ID);
 
             if (result != null)
             {
@@ -49,7 +50,7 @@ namespace HMC_Project.Services
 
         public async Task UpdateAsync(Employee employee)
         {
-            var existingEmployee = await _employeeRepository.GetByIDAsync(employee.ID);
+            var existingEmployee = await _employeeRepo.GetByIDAsync(employee.ID);
             if (existingEmployee == null)
             {
                 throw new ArgumentException("Employee not found.");
@@ -72,7 +73,7 @@ namespace HMC_Project.Services
 
         public async Task DeleteAsync(Employee employee)
         {
-            var existingEmployee = await _employeeRepository.GetByIDAsync(employee.ID);
+            var existingEmployee = await _employeeRepo.GetByIDAsync(employee.ID);
             if (existingEmployee == null)
             {
                 throw new ArgumentException("Employee not found.");

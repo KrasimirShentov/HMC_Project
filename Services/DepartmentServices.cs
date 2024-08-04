@@ -1,4 +1,5 @@
-﻿using HMC_Project.Interfaces.Services;
+﻿using HMC_Project.Interfaces.Repos;
+using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
 
@@ -6,17 +7,17 @@ namespace HMC_Project.Services
 {
     public class DepartmentServices : IDepartmentInterface
     {
-        private readonly IDepartmentInterface _department;
+        private readonly IRepDepartmentInterfaces _departmentRepo;
         private HMCDbContext _dbContext;
 
-        public DepartmentServices(IDepartmentInterface departmentInterface, HMCDbContext hMCDbContext)
+        public DepartmentServices(IRepDepartmentInterfaces departmentRepo, HMCDbContext hMCDbContext)
         {
-            _department = departmentInterface;
+            _departmentRepo = departmentRepo;
             _dbContext = hMCDbContext;
         }
         public async Task<Department> GetByIDAsync(Guid DepartmentID)
         {
-            var result = await _department.GetByIDAsync(DepartmentID);
+            var result = await _departmentRepo.GetByIDAsync(DepartmentID);
 
             if (result == null)
             {
@@ -26,11 +27,11 @@ namespace HMC_Project.Services
         }
         public async Task<IEnumerable<Department>> GetAllAsync()
         {
-            return await _department.GetAllAsync();
+            return await _departmentRepo.GetAllAsync();
         }
         public async Task<Department> CreateAsync(DepartmentRequest departmentRequest)
         {
-            var result = await _department.GetByIDAsync(departmentRequest.ID);
+            var result = await _departmentRepo.GetByIDAsync(departmentRequest.ID);
 
             if (result != null)
             {
@@ -45,7 +46,7 @@ namespace HMC_Project.Services
         }
         public async Task UpdateAsync(Department department)
         {
-            var ExistingDeprt = await _department.GetByIDAsync(department.Id);
+            var ExistingDeprt = await _departmentRepo.GetByIDAsync(department.Id);
             if (ExistingDeprt == null)
             {
                 throw new ArgumentNullException(nameof(department));
@@ -62,7 +63,7 @@ namespace HMC_Project.Services
         }
         public async Task DeleteAsync(Department department)
         {
-            var deprt = await _department.GetByIDAsync(department.Id);
+            var deprt = await _departmentRepo.GetByIDAsync(department.Id);
 
             if (deprt == null)
             {
