@@ -2,6 +2,11 @@
 using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using NuGet.Versioning;
+using System.Xml.Linq;
 
 namespace HMC_Project.Services
 {
@@ -34,14 +39,21 @@ namespace HMC_Project.Services
 
         public async Task<Employee> CreateAsync(EmployeeRequest employeeRequest)
         {
-            var result = await _employeeRepo.GetByIDAsync(employeeRequest.ID);
+            var department = await _dbContext.Departments.FindAsync(employeeRequest.DepartmentId);
+            var training = new Training("Permanent", "CEO", "Owner of a company", 168);
 
-            if (result != null)
+            var newEmployee = new Employee
             {
-                throw new ArgumentException("An employee with this ID already exists.");
-            }
+                ID = employeeRequest.ID,
+                Name = employeeRequest.Name,
+                Surname = employeeRequest.Surname,
+                Age = employeeRequest.Age,
+                Email = employeeRequest.Email,
+                Position = employeeRequest.Position,
+                Department = department,
+                Training = training
+            };
 
-            var newEmployee = MapRequestToEmployee(employeeRequest);
             _dbContext.Add(newEmployee);
             await _dbContext.SaveChangesAsync();
 
@@ -62,10 +74,6 @@ namespace HMC_Project.Services
             existingEmployee.Email = employee.Email;
             existingEmployee.Position = employee.Position;
             existingEmployee.Gender = employee.Gender;
-            existingEmployee.Training = employee.Training;
-            existingEmployee.Department = employee.Department;
-            existingEmployee.Birthday = employee.Birthday;
-            existingEmployee.HireDate = employee.HireDate;
 
             _dbContext.Update(existingEmployee);
             await _dbContext.SaveChangesAsync();
@@ -81,20 +89,6 @@ namespace HMC_Project.Services
 
             _dbContext.Remove(existingEmployee);
             await _dbContext.SaveChangesAsync();
-        }
-
-        private Employee MapRequestToEmployee(EmployeeRequest employeeRequest)
-        {
-            return new Employee(
-                employeeRequest.ID != Guid.Empty ? employeeRequest.ID : Guid.NewGuid(),
-                employeeRequest.Name,
-                employeeRequest.Surname,
-                employeeRequest.Age,
-                employeeRequest.Email,
-                employeeRequest.Position)
-            {
-                Gender = employeeRequest.Gender
-            };
         }
     }
 }

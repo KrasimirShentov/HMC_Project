@@ -31,14 +31,16 @@ namespace HMC_Project.Services
         }
         public async Task<Department> CreateAsync(DepartmentRequest departmentRequest)
         {
-            var result = await _departmentRepo.GetByIDAsync(departmentRequest.ID);
-
-            if (result != null)
+            var newDepartment = new Department
             {
-                throw new ArgumentException("A department with this ID already exists.");
-            }
+                Id = departmentRequest.ID,
+                Name = departmentRequest.Name,
+                Description = departmentRequest.Description,
+                Type = departmentRequest.Type,
+                Email = departmentRequest.Email,
+                PhoneNumber = departmentRequest.PhoneNumber
+            };
 
-            var newDepartment = MapRequestToDepartment(departmentRequest);
             _dbContext.Add(newDepartment);
             await _dbContext.SaveChangesAsync();
 
@@ -72,19 +74,6 @@ namespace HMC_Project.Services
 
             _dbContext.Remove(deprt);
             await _dbContext.SaveChangesAsync();
-        }
-
-        private Department MapRequestToDepartment(DepartmentRequest departmentRequest)
-        {
-            return new Department
-            {
-                Id = departmentRequest.ID != Guid.Empty ? departmentRequest.ID : Guid.NewGuid(),
-                Name = departmentRequest.Name,
-                Description = departmentRequest.Description,
-                Type = departmentRequest.Type,
-                Email = departmentRequest.Email,
-                PhoneNumber = departmentRequest.PhoneNumber
-            };
         }
     }
 }

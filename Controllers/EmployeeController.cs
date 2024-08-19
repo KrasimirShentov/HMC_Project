@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HMC_Project.Interfaces.Services;
+using HMC_Project.Models;
+using HMC_Project.Requests;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace HMC_Project.Controllers
 {
@@ -7,54 +11,89 @@ namespace HMC_Project.Controllers
     [Route("[controller]")]
     public class EmployeeController : Controller
     {
-        [HttpGet("{ID}")]
-        public ActionResult GetByID()
+        private readonly IEmployeeInterface _employeeService;
+
+        public EmployeeController(IEmployeeInterface employee)
         {
-            return View();
+            _employeeService = employee;
         }
 
-        [HttpGet]
-        public ActionResult GetAll()
-        {
-            return View();
-        }
-        
-        [HttpPost]
-        public ActionResult Create()
+        [HttpGet("{ID}")]
+        public async Task<IActionResult> GetByID(Guid employeeID)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var department = await _employeeService.GetByIDAsync(employeeID);
+                return Ok(department);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var deps = await _employeeService.GetAllAsync();
+                return Ok(deps);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] EmployeeRequest _employeeRequest)
+        {
+            try
+            {
+                await _employeeService.CreateAsync(_employeeRequest);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+
+                return Forbid(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut]
-        public ActionResult Edit()
+        public async Task<IActionResult> Update(Employee employee)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _employeeService.UpdateAsync(employee);
+                return Ok();
             }
-            catch
+            catch (InvalidOperationException ex)
             {
-                return View();
+                return Forbid(ex.Message);
             }
         }
-        
-        [HttpDelete ]
-        public ActionResult Delete()
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Employee employee)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _employeeService.DeleteAsync(employee);
+                return Ok();
             }
-            catch
+            catch (InvalidOperationException ex)
             {
-                return View();
+                return Forbid(ex.Message);
             }
         }
     }

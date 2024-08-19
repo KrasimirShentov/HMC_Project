@@ -13,9 +13,9 @@ namespace HMC_Project.Models
         {
             
         }
-        public Training(Guid Id,string type, string positionName, string description, int trainingHours)
+        public Training(string type, string positionName, string description, int trainingHours)
         {
-            ID = Id;
+            ID = Guid.NewGuid();
             Type = type;
             PositionName = positionName;
             Description = description;

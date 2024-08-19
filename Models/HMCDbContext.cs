@@ -71,7 +71,7 @@ namespace HMC_Project.Models
                 entity.Property(t => t.PositionName).IsRequired();
                 entity.Property(t => t.Description).IsRequired();
                 entity.Property(t => t.TrainingHours).IsRequired();
-                entity.HasData(new Training(Guid.NewGuid(), "Type1", "Position1", "Description1", 40));
+                entity.HasData(new Training("Type1", "Position1", "Description1", 40));
             });
         }
     }

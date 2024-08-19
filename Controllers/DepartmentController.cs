@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HMC_Project.Interfaces.Services;
+using HMC_Project.Models;
+using HMC_Project.Repositories;
+using HMC_Project.Requests;
+using HMC_Project.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMC_Project.Controllers
@@ -7,54 +12,89 @@ namespace HMC_Project.Controllers
     [Route("[controller]")]
     public class DepartmentController : Controller
     {
+        private readonly IDepartmentInterface _departmentService;
+
+        public DepartmentController(IDepartmentInterface department)
+        {
+            _departmentService = department;
+        }
+
         [HttpGet("{ID}")]
-        public ActionResult GetByID()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public ActionResult GetAll()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Create()
+        public async Task<IActionResult> GetByID(Guid departmentID)
         {
             try
             {
-                return RedirectToAction();
+                var department = await _departmentService.GetByIDAsync(departmentID);
+                return Ok(department);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            { 
+                var deps = await _departmentService.GetAllAsync();
+                return Ok(deps);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] DepartmentRequest _departmentRequest)
+        {
+            try
+            {
+                await _departmentService.CreateAsync(_departmentRequest);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+            
+                    return Forbid(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut]
-        public ActionResult Update()
+        public async Task<IActionResult> Update(Department department)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _departmentService.UpdateAsync(department);
+                return Ok();
             }
-            catch
+            catch(InvalidOperationException ex)
             {
-                return View();
+                return Forbid(ex.Message);
             }
         }
 
         [HttpDelete]
-        public ActionResult Delete()
+        public async Task<IActionResult> Delete(Department DepartmentID)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _departmentService.DeleteAsync(DepartmentID);
+                return Ok();
             }
-            catch
+            catch(InvalidOperationException ex)
             {
-                return View();
+                return Forbid(ex.Message);
             }
         }
     }

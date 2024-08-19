@@ -7,7 +7,7 @@ namespace HMC_Project.Models
 {
     public class Employee
     {
-        public Guid ID { get; private set; }
+        public Guid ID { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public int Age { get; set; }
@@ -21,15 +21,11 @@ namespace HMC_Project.Models
         public DateTime Birthday { get; set; }
         public DateTime HireDate { get; set; }
         public virtual ICollection<EmployeeAddress> EmployeeAddresses { get; set; }
-
-        // Parameterless constructor required by EF Core
         public Employee()
         {
             EmployeeAddresses = new HashSet<EmployeeAddress>();
         }
-
-        // Parameterized constructor for easier instantiation in code
-        public Employee(Guid id, string name, string surname, int age, string email, string position)
+        public Employee(Guid id, string name, string surname, int age, string email, string position, /*Training training, */Department department)
         {
             ID = id;
             Name = name;
@@ -37,6 +33,8 @@ namespace HMC_Project.Models
             Age = age;
             Email = email;
             Position = position;
+            Training = null;
+            Department = department;
             EmployeeAddresses = new HashSet<EmployeeAddress>();
         }
     }

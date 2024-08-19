@@ -9,14 +9,13 @@ namespace HMC_Project.Requests
 {
     public class EmployeeRequest
     {
-        public Guid ID { get; private set; }
+        public Guid ID = Guid.NewGuid();
         public string Name{ get; set; }
         public string Surname { get; set; }
         public int Age { get; set; }
         public string Email {  get; set; }
         public string Position { get; set; }
         public GenderType Gender { get; set; }
-        public Training Training { get; set; }
-        public Department Department { get; set; }
+        public Guid DepartmentId { get; set; }
     }
 }

@@ -6,11 +6,12 @@ namespace HMC_Project.Requests
 {
     public class DepartmentRequest
     {
-        public Guid ID { get; set; }
+        public Guid ID = Guid.NewGuid();
         public string Name {  get; set; }
         public string Description{ get; set; }
         public string Type { get; set; }
         public string Email {  get; set; }
         public string PhoneNumber { get; set; }
+
     }
 }
