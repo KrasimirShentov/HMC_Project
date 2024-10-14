@@ -31,7 +31,6 @@ namespace HMC_Project.Repositories
         {
             _dbContext.Entry(employee).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
-
         }
         public async Task DeleteAsync(Employee employee)
         {

@@ -24,21 +24,6 @@ namespace HMC_Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Training",
-                columns: table => new
-                {
-                    ID = table.Column<Guid>(type: "uuid", nullable: false),
-                    Type = table.Column<string>(type: "text", nullable: false),
-                    PositionName = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    TrainingHours = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Training", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Departments",
                 columns: table => new
                 {

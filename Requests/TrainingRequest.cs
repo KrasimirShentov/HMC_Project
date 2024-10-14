@@ -2,7 +2,7 @@
 {
     public class TrainingRequest
     {
-        public Guid ID { get; private set; }
+        public Guid ID = Guid.NewGuid();
         public string Type { get; set; }
         public string PositionName { get; set; }
         public string Description { get; set; }

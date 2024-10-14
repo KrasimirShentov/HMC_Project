@@ -22,13 +22,15 @@ namespace HMC_Project.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<DepartmentAddress> DepartmentAddresses { get; set; }
+        public DbSet<Training> Training { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>()
                 .HasOne(e => e.Training)
                 .WithMany()
-                .HasForeignKey("TrainingId");
+                .HasForeignKey("TrainingId")
+                .OnDelete(DeleteBehavior.Restrict); ;
 
             modelBuilder.Entity<Employee>()
                 .HasOne(e => e.Department)
@@ -71,7 +73,6 @@ namespace HMC_Project.Models
                 entity.Property(t => t.PositionName).IsRequired();
                 entity.Property(t => t.Description).IsRequired();
                 entity.Property(t => t.TrainingHours).IsRequired();
-                entity.HasData(new Training("Type1", "Position1", "Description1", 40));
             });
         }
     }
