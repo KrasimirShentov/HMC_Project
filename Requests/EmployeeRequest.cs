@@ -16,6 +16,7 @@ namespace HMC_Project.Requests
         public string Email {  get; set; }
         public string Position { get; set; }
         public GenderType Gender { get; set; }
+        public Training Training { get; set; }
         public Guid DepartmentId { get; set; }
     }
 }

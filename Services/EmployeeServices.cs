@@ -40,7 +40,6 @@ namespace HMC_Project.Services
         public async Task<Employee> CreateAsync(EmployeeRequest employeeRequest)
         {
             var department = await _dbContext.Departments.FindAsync(employeeRequest.DepartmentId);
-            var training = new Training("Permanent", "CEO", "Owner of a company", 168);
 
             var newEmployee = new Employee
             {
@@ -51,7 +50,7 @@ namespace HMC_Project.Services
                 Email = employeeRequest.Email,
                 Position = employeeRequest.Position,
                 Department = department,
-                Training = training
+                Training = employeeRequest.Training
             };
 
             _dbContext.Add(newEmployee);

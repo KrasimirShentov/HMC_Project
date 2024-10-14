@@ -33,7 +33,7 @@ namespace HMC_Project.Models
             Age = age;
             Email = email;
             Position = position;
-            Training = null;
+            Training = Training;
             Department = department;
             EmployeeAddresses = new HashSet<EmployeeAddress>();
         }
