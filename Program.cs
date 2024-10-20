@@ -16,10 +16,12 @@ builder.Services.AddDbContext<HMCDbContext>(options =>
 
 builder.Services.AddScoped<IRepDepartmentInterfaces, DepartmentRepository>();
 builder.Services.AddScoped<IRepEmployeeintefaces, EmployeeReposity>();
+builder.Services.AddScoped<IRepTrainingInterface, TrainingRepository>();
 builder.Services.AddScoped<IRepUserInterface, UserRepository>();
 
 builder.Services.AddScoped<IDepartmentInterface, DepartmentServices>();
 builder.Services.AddScoped<IEmployeeInterface, EmployeeServices>();
+builder.Services.AddScoped<ITrainingInterface, TrainingService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

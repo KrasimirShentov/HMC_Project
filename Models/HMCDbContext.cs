@@ -26,21 +26,21 @@ namespace HMC_Project.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Training)
-                .WithMany()
-                .HasForeignKey("TrainingId")
-                .OnDelete(DeleteBehavior.Restrict); ;
+            //modelBuilder.Entity<Employee>()
+            //    .HasOne(e => e.Training)
+            //    .WithMany()
+            //    .HasForeignKey("TrainingId")
+            //    .OnDelete(DeleteBehavior.Restrict); ;
 
-            modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Department)
-                .WithMany()
-                .HasForeignKey("DepartmentId");
+            //modelBuilder.Entity<Employee>()
+            //    .HasOne(e => e.Department)
+            //    .WithMany()
+            //    .HasForeignKey("DepartmentId");
 
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.UserAddresses)
-                .WithOne()
-                .HasForeignKey("UserId");
+            //modelBuilder.Entity<User>()
+            //    .HasMany(u => u.UserAddresses)
+            //    .WithOne()
+            //    .HasForeignKey("UserId");
 
             modelBuilder.Entity<DepartmentAddress>()
                 .HasKey(da => new { da.DepartmentID, da.AddressID });

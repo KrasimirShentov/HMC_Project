@@ -23,7 +23,7 @@ namespace HMC_Project.Repositories
         public async Task<Training> CreateAsync(Training training)
         {
             _dbContext.Training.Add(training);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChangesAsync();
             return training;
         }
         public async Task UpdateAsync(Training training)

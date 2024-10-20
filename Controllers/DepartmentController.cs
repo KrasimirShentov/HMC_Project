@@ -53,7 +53,7 @@ namespace HMC_Project.Controllers
             try
             {
                 await _departmentService.CreateAsync(_departmentRequest);
-                return Ok();
+                return Ok(_departmentRequest);
             }
             catch (ArgumentException ex)
             {

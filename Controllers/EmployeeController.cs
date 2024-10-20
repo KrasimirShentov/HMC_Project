@@ -52,11 +52,10 @@ namespace HMC_Project.Controllers
             try
             {
                 await _employeeService.CreateAsync(_employeeRequest);
-                return Ok();
+                return Ok(_employeeRequest);
             }
             catch (ArgumentException ex)
             {
-
                 return Forbid(ex.Message);
             }
             catch (InvalidOperationException ex)
