@@ -25,7 +25,7 @@ namespace HMC_Project.Repositories
         public async Task<Department> CreateAsync (Department department)
         {
             _dbContext.Add(department);
-            _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return department;
         }
         public async Task UpdateAsync(Department department)

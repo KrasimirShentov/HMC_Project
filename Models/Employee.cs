@@ -28,8 +28,8 @@ namespace HMC_Project.Models
             Age = age;
             Email = email;
             Position = position;
-            Training = training;
             Department = department;
+            Training = training;
             EmployeeAddresses = new HashSet<EmployeeAddress>();
         }
     }

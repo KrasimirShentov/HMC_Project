@@ -19,12 +19,15 @@ namespace HMC_Project.Repositories
         }
         public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            return await _dbContext.Employees.ToListAsync();
+            return await _dbContext.Employees
+                .Include(e => e.Training)  
+                .Include(e => e.Department) 
+                .ToListAsync();
         }
         public async Task<Employee> CreateAsync(Employee employee)
         {
             _dbContext.Employees.Add(employee);
-            _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return employee;
         }
         public async Task UpdateAsync(Employee employee)

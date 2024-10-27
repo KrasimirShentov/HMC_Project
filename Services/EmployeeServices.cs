@@ -40,17 +40,27 @@ namespace HMC_Project.Services
         public async Task<Employee> CreateAsync(EmployeeRequest employeeRequest)
         {
             var department = await _dbContext.Departments.FindAsync(employeeRequest.DepartmentId);
+            if (department == null)
+            {
+                throw new ArgumentException("Invalid Department ID");
+            }
+
+            var training = await _dbContext.Training.FindAsync(employeeRequest.TrainingId);
+            if (training == null)
+            {
+                throw new ArgumentException("Invalid Training ID");
+            }
 
             var newEmployee = new Employee
             {
-                ID = employeeRequest.ID,
+                ID = Guid.NewGuid(),
                 Name = employeeRequest.Name,
                 Surname = employeeRequest.Surname,
                 Age = employeeRequest.Age,
                 Email = employeeRequest.Email,
                 Position = employeeRequest.Position,
                 Department = department,
-                Training = employeeRequest.Training
+                Training = training,
             };
 
             _dbContext.Add(newEmployee);
