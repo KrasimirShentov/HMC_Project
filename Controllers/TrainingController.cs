@@ -65,12 +65,12 @@ namespace HMC_Project.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateAsync(Training training)
+        [HttpPut("{ID}")]
+        public async Task<IActionResult> UpdateAsync(Guid ID, [FromBody] TrainingRequest trainingRequest)
         {
             try
             {
-                await _trainingInterface.UpdateAsync(training);
+                await _trainingInterface.UpdateAsync(ID, trainingRequest);
                 return Ok();
 
             }
@@ -81,12 +81,12 @@ namespace HMC_Project.Controllers
 
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAsync(Training training) 
+        [HttpDelete("{ID}")]
+        public async Task<IActionResult> DeleteAsync(Guid TrainingID) 
         {
             try
             {
-                await _trainingInterface.DeleteAsync(training);
+                await _trainingInterface.DeleteAsync(TrainingID);
                 return Ok();
             }
             catch (InvalidOperationException ex)
@@ -95,4 +95,4 @@ namespace HMC_Project.Controllers
             }
         }
     }
-}
+}   

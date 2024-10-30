@@ -45,25 +45,25 @@ namespace HMC_Project.Services
 
             return newTraining;
         }
-        public async Task UpdateAsync(Training training)
+        public async Task UpdateAsync(Guid ID, TrainingRequest trainingRequest)
         {
-            var existingTraining = await _repTrainingInterface.GetByIDAsync(training.ID);
+            var existingTraining = await _repTrainingInterface.GetByIDAsync(ID);
             if (existingTraining == null)
             {
-                throw new ArgumentNullException(nameof(training));
+                throw new ArgumentNullException(nameof(trainingRequest));
             }
 
-            existingTraining.Type = training.Type;
-            existingTraining.PositionName = training.PositionName;
-            existingTraining.Description = training.Description;
-            existingTraining.TrainingHours = training.TrainingHours;
+            existingTraining.Type = trainingRequest.Type;
+            existingTraining.PositionName = trainingRequest.PositionName;
+            existingTraining.Description = trainingRequest.Description;
+            existingTraining.TrainingHours = trainingRequest.TrainingHours;
 
             _dbContext.Update(existingTraining);
             await _dbContext.SaveChangesAsync();
         }
-        public async Task DeleteAsync(Training training)
+        public async Task DeleteAsync(Guid TrainingID)
         {
-            var _training = await _repTrainingInterface.GetByIDAsync(training.ID);
+            var _training = await _repTrainingInterface.GetByIDAsync(TrainingID);
 
             if (_training == null)
             {

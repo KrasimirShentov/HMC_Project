@@ -8,7 +8,7 @@ namespace HMC_Project.Interfaces.Services
         Task<Training> GetByIDAsync(Guid TrainingID);
         Task<IEnumerable<Training>> GetAllAsync();
         Task<Training> CreateAsync(TrainingRequest trainingRequest);
-        Task UpdateAsync(Training training);
-        Task DeleteAsync(Training training);
+        Task UpdateAsync(Guid ID, TrainingRequest trainingRequest);
+        Task DeleteAsync(Guid ID);
     }
 }
