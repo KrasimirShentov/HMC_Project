@@ -46,26 +46,26 @@ namespace HMC_Project.Services
 
             return newDepartment;
         }
-        public async Task UpdateAsync(Department department)
+        public async Task UpdateAsync(Guid ID, DepartmentRequest departmentRequest)
         {
-            var ExistingDeprt = await _departmentRepo.GetByIDAsync(department.Id);
+            var ExistingDeprt = await _departmentRepo.GetByIDAsync(ID);
             if (ExistingDeprt == null)
             {
-                throw new ArgumentNullException(nameof(department));
+                throw new ArgumentNullException("Department not found");
             }
 
-            ExistingDeprt.Name = department.Name;
-            ExistingDeprt.Description = department.Description;
-            ExistingDeprt.Type = department.Type;
-            ExistingDeprt.Email = department.Email;
-            ExistingDeprt.PhoneNumber = department.PhoneNumber;
+            ExistingDeprt.Name = departmentRequest.Name;
+            ExistingDeprt.Description = departmentRequest.Description;
+            ExistingDeprt.Type = departmentRequest.Type;
+            ExistingDeprt.Email = departmentRequest.Email;
+            ExistingDeprt.PhoneNumber = departmentRequest.PhoneNumber;
 
             _dbContext.Update(ExistingDeprt);
             await _dbContext.SaveChangesAsync();
         }
-        public async Task DeleteAsync(Department department)
+        public async Task DeleteAsync(Guid ID)
         {
-            var deprt = await _departmentRepo.GetByIDAsync(department.Id);
+            var deprt = await _departmentRepo.GetByIDAsync(ID);
 
             if (deprt == null)
             {

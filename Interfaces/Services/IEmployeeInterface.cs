@@ -8,7 +8,7 @@ namespace HMC_Project.Interfaces.Services
         Task<Employee> GetByIDAsync(Guid EmployeeID);
         Task<IEnumerable<Employee>> GetAllAsync();
         Task<Employee> CreateAsync(EmployeeRequest employeeRequest);
-        Task UpdateAsync(Employee employee);
-        Task DeleteAsync(Employee employee);
+        Task UpdateAsync(Guid ID,EmployeeRequest employeeRequest);
+        Task DeleteAsync(Guid ID);
     }
 }

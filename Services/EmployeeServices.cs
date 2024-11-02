@@ -69,28 +69,28 @@ namespace HMC_Project.Services
             return newEmployee;
         }
 
-        public async Task UpdateAsync(Employee employee)
+        public async Task UpdateAsync(Guid ID, EmployeeRequest employeeRequest)
         {
-            var existingEmployee = await _employeeRepo.GetByIDAsync(employee.ID);
+            var existingEmployee = await _employeeRepo.GetByIDAsync(ID);
             if (existingEmployee == null)
             {
                 throw new ArgumentException("Employee not found.");
             }
 
-            existingEmployee.Name = employee.Name;
-            existingEmployee.Surname = employee.Surname;
-            existingEmployee.Age = employee.Age;
-            existingEmployee.Email = employee.Email;
-            existingEmployee.Position = employee.Position;
-            existingEmployee.Gender = employee.Gender;
+            existingEmployee.Name = employeeRequest.Name;
+            existingEmployee.Surname = employeeRequest.Surname;
+            existingEmployee.Age = employeeRequest.Age;
+            existingEmployee.Email = employeeRequest.Email;
+            existingEmployee.Position = employeeRequest.Position;
+            existingEmployee.Gender = employeeRequest.Gender;
 
             _dbContext.Update(existingEmployee);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Employee employee)
+        public async Task DeleteAsync(Guid ID)
         {
-            var existingEmployee = await _employeeRepo.GetByIDAsync(employee.ID);
+            var existingEmployee = await _employeeRepo.GetByIDAsync(ID);
             if (existingEmployee == null)
             {
                 throw new ArgumentException("Employee not found.");

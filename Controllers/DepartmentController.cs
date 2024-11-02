@@ -70,12 +70,12 @@ namespace HMC_Project.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(Department department)
+        [HttpPut("{ID}")]
+        public async Task<IActionResult> Update(Guid ID, DepartmentRequest departmentRequest)
         {
             try
             {
-                await _departmentService.UpdateAsync(department);
+                await _departmentService.UpdateAsync(ID, departmentRequest);
                 return Ok();
             }
             catch(InvalidOperationException ex)
@@ -84,12 +84,12 @@ namespace HMC_Project.Controllers
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(Department DepartmentID)
+        [HttpDelete("{ID}")]
+        public async Task<IActionResult> Delete(Guid ID)
         {
             try
             {
-                await _departmentService.DeleteAsync(DepartmentID);
+                await _departmentService.DeleteAsync(ID);
                 return Ok();
             }
             catch(InvalidOperationException ex)
