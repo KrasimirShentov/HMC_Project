@@ -1,39 +1,34 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace HMC_Project.Models
 {
     public class Address
     {
-        private string _address;
-
         [Key]
-        public Guid ID { get; private set; }
-        public string AddressName
-        {
-            get
-            {
-                return _address;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    _address = value;
-                }
-                throw new ArgumentNullException("Address can't be null or empty");
-            }
-        }
+        public Guid ID { get; set; }
 
-        public virtual ICollection<Department> DepartmentAddresses { get; private set; }
-        public virtual ICollection<Employee> EmployeeAddresses { get; private set; }
-        public virtual ICollection<User> UserAddresses { get; private set; }
-        public Address(string addressName)
+        [Required]
+        [MaxLength(255)]
+        public string AddressName { get; set; }
+        public virtual ICollection<DepartmentAddress> DepartmentAddresses { get; set; }
+        public virtual ICollection<EmployeeAddress> EmployeeAddresses { get; set; }
+        public Guid UserID { get; set; }
+        public virtual User User { get; set; }
+        public Address(string addressName, Guid userID)
         {
             ID = Guid.NewGuid();
+            UserID = userID;
             AddressName = addressName;
-            DepartmentAddresses = new HashSet<Department>();
-            EmployeeAddresses = new HashSet<Employee>();
-            UserAddresses = new HashSet<User>();
+            DepartmentAddresses = new HashSet<DepartmentAddress>();
+            EmployeeAddresses = new HashSet<EmployeeAddress>();
+
+        }
+        public Address()
+        {
+            DepartmentAddresses = new HashSet<DepartmentAddress>();
+            EmployeeAddresses = new HashSet<EmployeeAddress>();
         }
     }
 }

@@ -2,11 +2,6 @@
 {
     public class Department
     {
-        private string _name;
-        private string _description;
-        private string _Type;
-        private string _email;
-
         public Guid Id { get; set; }
 
         public string Name{ get; set; }

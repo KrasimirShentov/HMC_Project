@@ -37,10 +37,19 @@ namespace HMC_Project.Models
                 .WithMany()
                 .HasForeignKey("DepartmentId");
 
-            //modelBuilder.Entity<User>()
-            //    .HasMany(u => u.UserAddresses)
-            //    .WithOne()
-            //    .HasForeignKey("UserId");
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Addresses)
+                .WithOne(a => a.User)
+                .HasForeignKey(a => a.UserID);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.UserName)
+                .IsUnique();
+
+            modelBuilder.Entity<Address>()
+                .HasOne(a => a.User)
+                .WithMany(u => u.Addresses)
+                .HasForeignKey(a => a.UserID);
 
             modelBuilder.Entity<DepartmentAddress>()
                 .HasKey(da => new { da.DepartmentID, da.AddressID });
@@ -48,8 +57,6 @@ namespace HMC_Project.Models
             modelBuilder.Entity<EmployeeAddress>()
                 .HasKey(da => new { da.EmployeeID, da.AddressID });
 
-            modelBuilder.Entity<UserAddress>()
-                .HasKey(da => new { da.UserID, da.UserAddressID });
 
             modelBuilder.Entity<DepartmentAddress>()
                 .HasOne(da => da.Department)
@@ -60,11 +67,6 @@ namespace HMC_Project.Models
                 .HasOne(da => da.Employee)
                 .WithMany(d => d.EmployeeAddresses)
                 .HasForeignKey(da => da.EmployeeID);
-
-            modelBuilder.Entity<UserAddress>()
-                .HasOne(da => da.User)
-                .WithMany(d => d.UserAddresses)
-                .HasForeignKey(da => da.UserID);
 
             modelBuilder.Entity<Training>(entity =>
             {
