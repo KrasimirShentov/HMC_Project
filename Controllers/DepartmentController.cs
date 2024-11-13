@@ -1,15 +1,13 @@
 ﻿using HMC_Project.Interfaces.Services;
-using HMC_Project.Models;
-using HMC_Project.Repositories;
 using HMC_Project.Requests;
-using HMC_Project.Services;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class DepartmentController : Controller
     {
         private readonly IDepartmentInterface _departmentService;
@@ -37,7 +35,7 @@ namespace HMC_Project.Controllers
         public async Task<IActionResult> GetAll()
         {
             try
-            { 
+            {
                 var deps = await _departmentService.GetAllAsync();
                 return Ok(deps);
             }
@@ -57,8 +55,8 @@ namespace HMC_Project.Controllers
             }
             catch (ArgumentException ex)
             {
-            
-                    return Forbid(ex.Message);
+
+                return Forbid(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
@@ -78,7 +76,7 @@ namespace HMC_Project.Controllers
                 await _departmentService.UpdateAsync(ID, departmentRequest);
                 return Ok();
             }
-            catch(InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 return Forbid(ex.Message);
             }
@@ -92,7 +90,7 @@ namespace HMC_Project.Controllers
                 await _departmentService.DeleteAsync(ID);
                 return Ok();
             }
-            catch(InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 return Forbid(ex.Message);
             }

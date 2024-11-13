@@ -1,6 +1,7 @@
 ﻿using HMC_Project.Dtos;
 using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

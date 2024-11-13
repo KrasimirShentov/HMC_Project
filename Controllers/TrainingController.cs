@@ -1,12 +1,14 @@
 ﻿using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class TrainingController : Controller
     {
         private readonly ITrainingInterface _trainingInterface;

@@ -39,16 +39,15 @@ namespace HMC_Project.Services
             new Claim(ClaimTypes.Role, "User")
         }),
                 Expires = DateTime.UtcNow.AddDays(7),
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Audience"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-
-            Console.WriteLine($"Generated Token: {tokenString}");
-
-            return tokenString;
+            return tokenHandler.WriteToken(token);
         }
+
 
 
         public async Task<User> RegisterUserAsync(User user)
