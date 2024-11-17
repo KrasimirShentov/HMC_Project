@@ -12,6 +12,7 @@ namespace HMC_Project.Requests
         public string Type { get; set; }
         public string Email {  get; set; }
         public string PhoneNumber { get; set; }
+        public Guid CompanyID { get; set; }
 
     }
 }

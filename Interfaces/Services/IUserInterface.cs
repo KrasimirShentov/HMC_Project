@@ -7,5 +7,7 @@ namespace HMC_Project.Interfaces.Services
     {
         Task<string> AuthenticateAsync(string username, string password);
         Task<User> RegisterUserAsync(User user);
+        Task DeleteUserAsync(Guid userId);
+
     }
 }

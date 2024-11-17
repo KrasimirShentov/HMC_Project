@@ -66,5 +66,19 @@ namespace HMC_Project.Controllers
 
             return Ok(new { user.ID, user.Name });
         }
+
+        [HttpDelete("{ID}")]
+        public async Task<IActionResult> DeleteUser(Guid userId)
+        {
+            try
+            {
+                await _userService.DeleteUserAsync(userId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
     }
 }

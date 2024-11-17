@@ -33,20 +33,52 @@ namespace HMC_Project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<Guid>("CompanyID")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyID1")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("UserID")
                         .HasColumnType("uuid");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("CompanyID");
+
+                    b.HasIndex("CompanyID1");
 
                     b.HasIndex("UserID");
 
                     b.ToTable("Addresses");
                 });
 
+            modelBuilder.Entity("HMC_Project.Models.Company", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Companies");
+                });
+
             modelBuilder.Entity("HMC_Project.Models.Department", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyID")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
@@ -70,6 +102,8 @@ namespace HMC_Project.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyID");
 
                     b.ToTable("Departments");
                 });
@@ -226,18 +260,46 @@ namespace HMC_Project.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("HMC_Project.Models.Address", b =>
                 {
+                    b.HasOne("HMC_Project.Models.Company", null)
+                        .WithMany("Addresses")
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HMC_Project.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyID1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HMC_Project.Models.User", "User")
                         .WithMany("Addresses")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Company");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HMC_Project.Models.Department", b =>
+                {
+                    b.HasOne("HMC_Project.Models.Company", "Company")
+                        .WithMany("Departments")
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("HMC_Project.Models.DepartmentAddress", b =>
@@ -310,6 +372,13 @@ namespace HMC_Project.Migrations
                     b.Navigation("DepartmentAddresses");
 
                     b.Navigation("EmployeeAddresses");
+                });
+
+            modelBuilder.Entity("HMC_Project.Models.Company", b =>
+                {
+                    b.Navigation("Addresses");
+
+                    b.Navigation("Departments");
                 });
 
             modelBuilder.Entity("HMC_Project.Models.Department", b =>

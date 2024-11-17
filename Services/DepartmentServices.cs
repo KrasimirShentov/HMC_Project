@@ -31,6 +31,12 @@ namespace HMC_Project.Services
         }
         public async Task<Department> CreateAsync(DepartmentRequest departmentRequest)
         {
+            var company = await _dbContext.Companies.FindAsync(departmentRequest.CompanyID);
+            if (company == null)
+            {
+                throw new ArgumentException("Invalid Department ID");
+            }
+
             var newDepartment = new Department
             {
                 Id = departmentRequest.ID,
@@ -38,7 +44,8 @@ namespace HMC_Project.Services
                 Description = departmentRequest.Description,
                 Type = departmentRequest.Type,
                 Email = departmentRequest.Email,
-                PhoneNumber = departmentRequest.PhoneNumber
+                PhoneNumber = departmentRequest.PhoneNumber,
+                Company = company
             };
 
             _dbContext.Add(newDepartment);

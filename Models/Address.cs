@@ -16,6 +16,8 @@ namespace HMC_Project.Models
         public virtual ICollection<EmployeeAddress> EmployeeAddresses { get; set; }
         public Guid UserID { get; set; }
         public virtual User User { get; set; }
+        public Guid CompanyID { get; set; }
+        public Company Company { get; set; }
         public Address(string addressName, Guid userID)
         {
             ID = Guid.NewGuid();

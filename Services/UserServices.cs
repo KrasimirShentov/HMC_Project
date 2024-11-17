@@ -47,12 +47,13 @@ namespace HMC_Project.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-
-
-
         public async Task<User> RegisterUserAsync(User user)
         {
             return await _userRepository.RegisterAsync(user);
+        }
+        public async Task DeleteUserAsync(Guid userId)
+        {
+            await _userRepository.DeleteUserAsync(userId);
         }
     }
 }

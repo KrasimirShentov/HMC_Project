@@ -23,6 +23,7 @@ namespace HMC_Project.Models
         public DbSet<Address> Addresses { get; set; }
         public DbSet<DepartmentAddress> DepartmentAddresses { get; set; }
         public DbSet<Training> Training { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,6 +68,17 @@ namespace HMC_Project.Models
                 .HasOne(da => da.Employee)
                 .WithMany(d => d.EmployeeAddresses)
                 .HasForeignKey(da => da.EmployeeID);
+
+            modelBuilder.Entity<Company>()
+                .HasMany(c => c.Departments)
+                .WithOne(d => d.Company)
+                .HasForeignKey(d => d.CompanyID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Company>()
+                .HasMany(c => c.Addresses)
+                .WithOne(c => c.Company)
+                .HasForeignKey(a => a.CompanyID);
 
             modelBuilder.Entity<Training>(entity =>
             {

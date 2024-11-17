@@ -18,11 +18,13 @@ builder.Services.AddScoped<IRepDepartmentInterfaces, DepartmentRepository>();
 builder.Services.AddScoped<IRepEmployeeintefaces, EmployeeReposity>();
 builder.Services.AddScoped<IRepTrainingInterface, TrainingRepository>();
 builder.Services.AddScoped<IRepUserInterface, UserRepository>();
+builder.Services.AddScoped<IRepCompanyInterface, CompanyRepository>();
 
 builder.Services.AddScoped<IDepartmentInterface, DepartmentServices>();
 builder.Services.AddScoped<IEmployeeInterface, EmployeeServices>();
 builder.Services.AddScoped<ITrainingInterface, TrainingService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICompanyInterface, CompanyService>();
 
 builder.Services.AddAuthentication(options =>
 {
