@@ -1,19 +1,30 @@
 ﻿using HMC_Project.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace HMC_Project.Models
 {
     public class Employee
     {
+        [Key]
         public Guid ID { get; set; }
+        [Required, MaxLength(32)]
         public string Name { get; set; }
+        [Required, MaxLength(32)]
         public string Surname { get; set; }
+        [Required, MaxLength(32)]
         public int Age { get; set; }
+        [Required, EmailAddress]
         public string Email { get; set; }
+        [Required, MaxLength(32)]
         public string Position { get; set; }
+        [Required]
         public GenderType Gender { get; set; }
+        [Required]
         public virtual Training Training { get; set; }
+        [Required]
         public virtual Department Department { get; set; }
         public DateTime Birthday { get; set; }
+
         public DateTime HireDate { get; set; }
         public virtual ICollection<EmployeeAddress> EmployeeAddresses { get; set; }
         public Employee()

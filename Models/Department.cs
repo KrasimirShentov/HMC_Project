@@ -1,16 +1,26 @@
-﻿namespace HMC_Project.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace HMC_Project.Models
 {
     public class Department
     {
+        [Key]
         public Guid Id { get; set; }
-        public string Name{ get; set; }
+        [Required, MaxLength(32)]
+        public string Name { get; set; }
+        [Required, MaxLength(1000)]
         public string Description { get; set; }
+        [Required, MaxLength(32)]
         public string Type { get; set; }
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
+        [Required, MaxLength(32)]
         public string PhoneNumber { get; set; }
         public List<Employee> employees { get; set; }
         public virtual ICollection<DepartmentAddress> DepartmentAddresses { get; private set; }
-        public Guid CompanyID { get; set; }
+        [JsonIgnore]
         public virtual Company Company { get; set; }
 
         public Department()
@@ -19,10 +29,9 @@
             employees = new List<Employee>();
         }
 
-        public Department(string name, string description, string type, string email, string phoneNumber, Guid companyID)
+        public Department(string name, string description, string type, string email, string phoneNumber)
         {
             Id = Guid.NewGuid();
-            CompanyID = companyID;
             Name = name;
             Description = description;
             Type = type;

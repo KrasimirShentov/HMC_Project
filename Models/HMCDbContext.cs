@@ -69,11 +69,11 @@ namespace HMC_Project.Models
                 .WithMany(d => d.EmployeeAddresses)
                 .HasForeignKey(da => da.EmployeeID);
 
-            modelBuilder.Entity<Company>()
-                .HasMany(c => c.Departments)
-                .WithOne(d => d.Company)
-                .HasForeignKey(d => d.CompanyID)
-                .OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<Company>()
+            //    .HasMany(c => c.Departments)
+            //    .WithOne(d => d.Company)
+            //    .HasForeignKey(d => d.CompanyID)
+            //    .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Company>()
                 .HasMany(c => c.Addresses)

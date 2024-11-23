@@ -1,6 +1,7 @@
 ﻿using HMC_Project.Models.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace HMC_Project.Models
@@ -10,21 +11,22 @@ namespace HMC_Project.Models
         [Key]
         public Guid ID { get; set; }
 
-        [Required]
+        [Required, MaxLength(32)]
         public string Name { get; set; }
 
-        [Required]
+        [Required, MaxLength(32)]
         public string Surname { get; set; }
 
-        [Required]
+        [Required, MaxLength(32)]
         public string UserName { get; set; }
 
-        [Required]
+        [Required, MaxLength(24)]
         public string Password { get; set; }
 
-        [Required]
+        [Required, EmailAddress]
         public string Email { get; set; }
 
+        [Required]
         public GenderType Gender { get; set; }
 
         public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;

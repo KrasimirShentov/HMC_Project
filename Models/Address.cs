@@ -9,9 +9,9 @@ namespace HMC_Project.Models
         [Key]
         public Guid ID { get; set; }
 
-        [Required]
-        [MaxLength(255)]
+        [Required, MaxLength(255)]
         public string AddressName { get; set; }
+
         public virtual ICollection<DepartmentAddress> DepartmentAddresses { get; set; }
         public virtual ICollection<EmployeeAddress> EmployeeAddresses { get; set; }
         public Guid UserID { get; set; }
