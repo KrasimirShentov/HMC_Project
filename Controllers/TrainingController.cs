@@ -8,7 +8,7 @@ namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class TrainingController : Controller
     {
         private readonly ITrainingInterface _trainingInterface;

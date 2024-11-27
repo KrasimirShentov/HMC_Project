@@ -1,5 +1,7 @@
 ﻿using HMC_Project.Dtos;
+using HMC_Project.Models;
 using System.Collections.Generic;
+using System.Net;
 
 namespace HMC_Project.Requests
 {
@@ -8,5 +10,6 @@ namespace HMC_Project.Requests
         public string Name { get; set; }
         public string Description { get; set; }
         public List<AddressDto> Addresses { get; set; }
+
     }
 }

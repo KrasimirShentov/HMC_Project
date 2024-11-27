@@ -27,6 +27,7 @@ namespace HMC_Project.Models
             PositionName = positionName;
             Description = description;
             TrainingHours = trainingHours;
+            Employees = new HashSet<Employee>();
         }
     }
 }

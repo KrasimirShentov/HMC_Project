@@ -7,7 +7,7 @@ namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class DepartmentController : Controller
     {
         private readonly IDepartmentInterface _departmentService;

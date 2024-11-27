@@ -10,7 +10,7 @@ namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class EmployeeController : Controller
     {
         private readonly IEmployeeInterface _employeeService;

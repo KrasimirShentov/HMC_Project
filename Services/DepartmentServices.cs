@@ -34,12 +34,12 @@ namespace HMC_Project.Services
             var company = await _dbContext.Companies.FindAsync(departmentRequest.CompanyID);
             if (company == null)
             {
-                throw new ArgumentException("Invalid Department ID");
+                throw new ArgumentException("Invalid Company ID");
             }
 
             var newDepartment = new Department
             {
-                Id = departmentRequest.ID,
+                Id = Guid.NewGuid(),
                 Name = departmentRequest.Name,
                 Description = departmentRequest.Description,
                 Type = departmentRequest.Type,

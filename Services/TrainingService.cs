@@ -25,12 +25,13 @@ namespace HMC_Project.Services
             }
             return result;
         }
-        public async Task<IEnumerable<Training>> GetAllAsync()
+        public async Task<IEnumerable<TrainingRequest>> GetAllAsync()
         {
-             return await _repTrainingInterface.GetAllAsync();
+            return await _repTrainingInterface.GetAllAsync();
         }
         public async Task<Training> CreateAsync(TrainingRequest trainingRequest)
         {
+
             var newTraining = new Training
             {
                 ID = trainingRequest.ID,
@@ -38,6 +39,7 @@ namespace HMC_Project.Services
                 PositionName = trainingRequest.PositionName,
                 Description = trainingRequest.Description,
                 TrainingHours = trainingRequest.TrainingHours
+                
             };
 
             _dbContext.Add(newTraining);

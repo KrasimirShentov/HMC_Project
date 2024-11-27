@@ -1,5 +1,6 @@
 ﻿using HMC_Project.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace HMC_Project.Models
 {

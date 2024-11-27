@@ -60,8 +60,10 @@ namespace HMC_Project.Services
                 Email = employeeRequest.Email,
                 Position = employeeRequest.Position,
                 Department = department,
-                Training = training,
+                Training = training
             };
+
+            training.Employees.Add(newEmployee);
 
             _dbContext.Add(newEmployee);
             await _dbContext.SaveChangesAsync();

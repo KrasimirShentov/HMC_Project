@@ -11,10 +11,12 @@ namespace HMC_Project.Services
     public class CompanyService : ICompanyInterface
     {
         private readonly IRepCompanyInterface _companyRepository;
+        private readonly HMCDbContext _dbContext;
 
-        public CompanyService(IRepCompanyInterface companyRepository)
+        public CompanyService(IRepCompanyInterface companyRepository, HMCDbContext dbContext)
         {
             _companyRepository = companyRepository;
+            _dbContext = dbContext;
         }
 
         public async Task<IEnumerable<Company>> GetAllAsync()
@@ -29,11 +31,13 @@ namespace HMC_Project.Services
 
         public async Task<Company> CreateAsync(CompanyRequest companyRequest)
         {
+            //var dep = await _dbContext.Companies.FindAsync(companyRequest)
+
             var company = new Company
             {
                 ID = Guid.NewGuid(),
                 Name = companyRequest.Name,
-                Description = companyRequest.Description
+                Description = companyRequest.Description,
             };
 
             return await _companyRepository.CreateAsync(company);

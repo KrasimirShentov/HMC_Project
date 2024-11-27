@@ -1,4 +1,6 @@
-﻿namespace HMC_Project.Requests
+﻿using HMC_Project.Models;
+
+namespace HMC_Project.Requests
 {
     public class TrainingRequest
     {
@@ -7,5 +9,7 @@
         public string PositionName { get; set; }
         public string Description { get; set; }
         public int TrainingHours { get; set; }
+        public IEnumerable<EmployeeRequest> Employees { get; set; }
+
     }
 }
