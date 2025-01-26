@@ -38,6 +38,7 @@ namespace HMC_Project.Models
                 .WithMany()
                 .HasForeignKey("DepartmentId");
 
+
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Addresses)
                 .WithOne(a => a.User)
@@ -79,6 +80,12 @@ namespace HMC_Project.Models
                 .HasMany(c => c.Addresses)
                 .WithOne(c => c.Company)
                 .HasForeignKey(a => a.CompanyID);
+
+            modelBuilder.Entity<Address>()
+                .HasOne(a => a.Company)
+                .WithMany(c => c.Addresses)
+                .HasForeignKey(a => a.CompanyID)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Training>(entity =>
             {

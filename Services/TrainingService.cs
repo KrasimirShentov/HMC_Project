@@ -2,6 +2,7 @@
 using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
+using Microsoft.EntityFrameworkCore;
 
 namespace HMC_Project.Services
 {
@@ -25,12 +26,18 @@ namespace HMC_Project.Services
             }
             return result;
         }
-        public async Task<IEnumerable<TrainingRequest>> GetAllAsync()
+        public async Task<IEnumerable<Training>> GetAllAsync()
         {
             return await _repTrainingInterface.GetAllAsync();
         }
         public async Task<Training> CreateAsync(TrainingRequest trainingRequest)
         {
+            var existingTraining = await _dbContext.Training
+        .FirstOrDefaultAsync(t => t.PositionName == trainingRequest.PositionName);
+            if (existingTraining != null)
+            {
+                throw new ArgumentException("Training with the same type and position name already exists.");
+            }
 
             var newTraining = new Training
             {
@@ -39,7 +46,6 @@ namespace HMC_Project.Services
                 PositionName = trainingRequest.PositionName,
                 Description = trainingRequest.Description,
                 TrainingHours = trainingRequest.TrainingHours
-                
             };
 
             _dbContext.Add(newTraining);

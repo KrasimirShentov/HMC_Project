@@ -18,6 +18,11 @@ namespace HMC_Project.Models
         public virtual User User { get; set; }
         public Guid CompanyID { get; set; }
         public Company Company { get; set; }
+        public Address()
+        {
+            DepartmentAddresses = new HashSet<DepartmentAddress>();
+            EmployeeAddresses = new HashSet<EmployeeAddress>();
+        }
         public Address(string addressName, Guid userID)
         {
             ID = Guid.NewGuid();
@@ -26,11 +31,6 @@ namespace HMC_Project.Models
             DepartmentAddresses = new HashSet<DepartmentAddress>();
             EmployeeAddresses = new HashSet<EmployeeAddress>();
 
-        }
-        public Address()
-        {
-            DepartmentAddresses = new HashSet<DepartmentAddress>();
-            EmployeeAddresses = new HashSet<EmployeeAddress>();
         }
     }
 }

@@ -17,30 +17,11 @@ namespace HMC_Project.Repositories
         {
             return await _dbContext.Training.FindAsync(TrainingID);
         }
-        public async Task<IEnumerable<TrainingRequest>> GetAllAsync()
+        public async Task<IEnumerable<Training>> GetAllAsync()
         {
-            var trainings = _dbContext.Training
-        .Select(t => new TrainingRequest
-        {
-            ID = t.ID,
-            Type = t.Type,
-            PositionName = t.PositionName,
-            Description = t.Description,
-            TrainingHours = t.TrainingHours,
-            Employees = t.Employees
-                .Select(e => new EmployeeRequest
-                {
-                    ID = e.ID,
-                    Name = e.Name,
-                    Surname = e.Surname,
-                    Email = e.Email,
-                    Position = e.Position,
-                })
-                .ToList()
-        })
-        .ToList();
-
-            return trainings;
+            return await _dbContext.Training
+                .Include(e => e.Employees)
+                .ToListAsync();
         }
 
         public async Task<Training> CreateAsync(Training training)

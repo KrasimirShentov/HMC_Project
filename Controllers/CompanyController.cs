@@ -10,7 +10,7 @@ namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class CompanyController : Controller
     {
         private readonly ICompanyInterface _companyService;
@@ -20,39 +20,87 @@ namespace HMC_Project.Controllers
             _companyService = companyService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var companies = await _companyService.GetAllAsync();
-            return Ok(companies);
-        }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(Guid id)
         {
-            var company = await _companyService.GetByIDAsync(id);
-            return Ok(company);
+            try
+            {
+                var company = await _companyService.GetByIDAsync(id);
+                if (company == null)
+                {
+                    return NotFound($"Company with ID {id} not found.");
+                }
+                return Ok(company);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var companies = await _companyService.GetAllAsync();
+                return Ok(companies);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CompanyRequest companyRequest)
         {
-            var company = await _companyService.CreateAsync(companyRequest);
-            return CreatedAtAction(nameof(GetByID), new { id = company.ID }, company);
+            try
+            {
+                var company = await _companyService.CreateAsync(companyRequest);
+                return CreatedAtAction(nameof(GetByID), new { id = company.ID }, company);
+            }
+            catch (ArgumentException ex)
+            {
+                return Forbid(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] CompanyRequest companyRequest)
         {
-            await _companyService.UpdateAsync(id, companyRequest);
-            return NoContent();
+            try
+            {
+                await _companyService.UpdateAsync(id, companyRequest);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _companyService.DeleteAsync(id);
-            return NoContent();
+            try
+            {
+                await _companyService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex.Message); 
+            }
         }
     }
 }

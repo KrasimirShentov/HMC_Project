@@ -13,14 +13,20 @@ namespace HMC_Project.Models
         public string Description { get; set; }
         [Required, MaxLength(32)]
         public string Type { get; set; }
+
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
         [Required, MaxLength(32)]
         public string PhoneNumber { get; set; }
-        public List<Employee> employees { get; set; }
-        public virtual ICollection<DepartmentAddress> DepartmentAddresses { get; private set; }
+
         [JsonIgnore]
+        public List<Employee> employees { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<DepartmentAddress> DepartmentAddresses { get; private set; }
+        //[JsonIgnore]
         public virtual Company Company { get; set; }
 
         public Department()
@@ -29,7 +35,7 @@ namespace HMC_Project.Models
             employees = new List<Employee>();
         }
 
-        public Department(string name, string description, string type, string email, string phoneNumber)
+        public Department(string name, string description, string type, string email, string phoneNumber, Company company)
         {
             Id = Guid.NewGuid();
             Name = name;
@@ -39,6 +45,7 @@ namespace HMC_Project.Models
             PhoneNumber = phoneNumber;
             DepartmentAddresses = new HashSet<DepartmentAddress>();
             employees = new List<Employee>();
+            Company = company;
         }
     }
 }

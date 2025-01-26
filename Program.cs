@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using HMC_Project.Models;
 using HMC_Project.Interfaces.Repos;
 using HMC_Project.Interfaces.Services;

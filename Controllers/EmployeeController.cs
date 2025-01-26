@@ -10,7 +10,7 @@ namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly IEmployeeInterface _employeeService;
@@ -21,11 +21,11 @@ namespace HMC_Project.Controllers
         }
 
         [HttpGet("{ID}")]
-        public async Task<IActionResult> GetByID(Guid employeeID)
+        public async Task<IActionResult> GetByID(Guid ID)
         {
             try
             {
-                var department = await _employeeService.GetByIDAsync(employeeID);
+                var department = await _employeeService.GetByIDAsync(ID);
                 return Ok(department);
             }
             catch (Exception ex)

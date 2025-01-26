@@ -8,7 +8,7 @@ namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class TrainingController : Controller
     {
         private readonly ITrainingInterface _trainingInterface;
@@ -18,11 +18,11 @@ namespace HMC_Project.Controllers
         }
 
         [HttpGet("{ID}")]
-        public async Task<IActionResult> GetByIDAsync(Guid TrainingID)
+        public async Task<IActionResult> GetByIDAsync(Guid ID)
         {
             try
             {
-                var training = await _trainingInterface.GetByIDAsync(TrainingID);
+                var training = await _trainingInterface.GetByIDAsync(ID);
                 return Ok(training);
             }
             catch (Exception ex)
@@ -84,11 +84,11 @@ namespace HMC_Project.Controllers
         }
 
         [HttpDelete("{ID}")]
-        public async Task<IActionResult> DeleteAsync(Guid TrainingID) 
+        public async Task<IActionResult> DeleteAsync(Guid ID) 
         {
             try
             {
-                await _trainingInterface.DeleteAsync(TrainingID);
+                await _trainingInterface.DeleteAsync(ID);
                 return Ok();
             }
             catch (InvalidOperationException ex)

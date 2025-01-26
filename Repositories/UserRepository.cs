@@ -36,9 +36,9 @@ namespace HMC_Project.Repositories
             }
             return true;
         }
-        public async Task DeleteUserAsync(Guid userId)
+        public async Task DeleteUserAsync(Guid ID)
         {
-            var user = await _dbContext.Users.FindAsync(userId);
+            var user = await _dbContext.Users.FindAsync(ID);
             if (user == null)
             {
                 throw new KeyNotFoundException("User not found");

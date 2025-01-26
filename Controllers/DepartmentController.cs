@@ -7,7 +7,7 @@ namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class DepartmentController : Controller
     {
         private readonly IDepartmentInterface _departmentService;
@@ -18,11 +18,11 @@ namespace HMC_Project.Controllers
         }
 
         [HttpGet("{ID}")]
-        public async Task<IActionResult> GetByID(Guid departmentID)
+        public async Task<IActionResult> GetByID(Guid ID)
         {
             try
             {
-                var department = await _departmentService.GetByIDAsync(departmentID);
+                var department = await _departmentService.GetByIDAsync(ID);
                 return Ok(department);
             }
             catch (Exception ex)
@@ -55,7 +55,6 @@ namespace HMC_Project.Controllers
             }
             catch (ArgumentException ex)
             {
-
                 return Forbid(ex.Message);
             }
             catch (InvalidOperationException ex)

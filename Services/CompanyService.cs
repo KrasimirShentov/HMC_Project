@@ -2,6 +2,7 @@
 using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,7 +32,11 @@ namespace HMC_Project.Services
 
         public async Task<Company> CreateAsync(CompanyRequest companyRequest)
         {
-            //var dep = await _dbContext.Companies.FindAsync(companyRequest)
+            var existingCompany = await _dbContext.Companies.FirstOrDefaultAsync(c => c.Name == companyRequest.Name);
+            if (existingCompany != null)
+            {
+                throw new ArgumentException("Company with the same name already exists.");
+            }
 
             var company = new Company
             {

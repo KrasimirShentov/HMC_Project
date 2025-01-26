@@ -4,6 +4,7 @@ using HMC_Project.Models;
 using HMC_Project.Requests;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using NuGet.Versioning;
 using System.Xml.Linq;
@@ -39,6 +40,12 @@ namespace HMC_Project.Services
 
         public async Task<Employee> CreateAsync(EmployeeRequest employeeRequest)
         {
+            var existingEmployee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.Email == employeeRequest.Email);
+            if (existingEmployee != null)
+            {
+                throw new ArgumentException("Employee with the same email already exists.");
+            }
+
             var department = await _dbContext.Departments.FindAsync(employeeRequest.DepartmentId);
             if (department == null)
             {

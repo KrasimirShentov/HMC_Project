@@ -20,7 +20,10 @@ namespace HMC_Project.Services
             _userRepository = userRepository;
             _configuration = configuration;
         }
-
+        public async Task<User> GetUserByUsernameAsync(string username)
+        {
+            return await _userRepository.GetByUsernameAsync(username);
+        }
         public async Task<string> AuthenticateAsync(string username, string password)
         {
             var validUser = await _userRepository.ValidateUserAsync(username, password);
@@ -51,9 +54,9 @@ namespace HMC_Project.Services
         {
             return await _userRepository.RegisterAsync(user);
         }
-        public async Task DeleteUserAsync(Guid userId)
+        public async Task DeleteUserAsync(Guid ID)
         {
-            await _userRepository.DeleteUserAsync(userId);
+            await _userRepository.DeleteUserAsync(ID);
         }
     }
 }

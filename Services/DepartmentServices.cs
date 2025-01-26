@@ -2,6 +2,7 @@
 using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
+using Microsoft.EntityFrameworkCore;
 
 namespace HMC_Project.Services
 {
@@ -31,6 +32,12 @@ namespace HMC_Project.Services
         }
         public async Task<Department> CreateAsync(DepartmentRequest departmentRequest)
         {
+            var existingDepartment = await _dbContext.Departments.FirstOrDefaultAsync(d => d.Name == departmentRequest.Name);
+            if (existingDepartment != null)
+            {
+                throw new ArgumentException("Department with the same name already exists in this company.");
+            }
+
             var company = await _dbContext.Companies.FindAsync(departmentRequest.CompanyID);
             if (company == null)
             {

@@ -20,7 +20,9 @@ namespace HMC_Project.Repositories
         }
         public async Task<IEnumerable<Department>> GetAllAsync()
         {
-            return await _dbContext.Departments.ToListAsync();
+            return await _dbContext.Departments
+                .Include(c => c.Company)
+                .ToListAsync();
         }
         public async Task<Department> CreateAsync (Department department)
         {

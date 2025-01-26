@@ -22,6 +22,20 @@ namespace HMC_Project.Controllers
             _dbContext = _dbcontext;
         }
 
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetByUsernameAsync(string username)
+        {
+            try
+            {
+                var user = await _userService.GetUserByUsernameAsync(username);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserRequest userRequest)
         {
@@ -68,11 +82,11 @@ namespace HMC_Project.Controllers
         }
 
         [HttpDelete("{ID}")]
-        public async Task<IActionResult> DeleteUser(Guid userId)
+        public async Task<IActionResult> DeleteUser(Guid ID)
         {
             try
             {
-                await _userService.DeleteUserAsync(userId);
+                await _userService.DeleteUserAsync(ID);
                 return NoContent();
             }
             catch (KeyNotFoundException)
