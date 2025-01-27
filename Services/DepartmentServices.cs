@@ -1,4 +1,5 @@
-﻿using HMC_Project.Interfaces.Repos;
+﻿using HMC_Project.Dtos;
+using HMC_Project.Interfaces.Repos;
 using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
@@ -26,7 +27,7 @@ namespace HMC_Project.Services
             }
             return result;
         }
-        public async Task<IEnumerable<Department>> GetAllAsync()
+        public async Task<IEnumerable<DepartmentDTO>> GetAllAsync()
         {
             return await _departmentRepo.GetAllAsync();
         }

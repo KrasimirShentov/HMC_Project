@@ -6,7 +6,7 @@ namespace HMC_Project.Interfaces.Services
     public interface ITrainingInterface
     {
         Task<Training> GetByIDAsync(Guid TrainingID);
-        Task<IEnumerable<Training>> GetAllAsync();
+        Task<IEnumerable<TrainingDTO>> GetAllAsync();
         Task<Training> CreateAsync(TrainingRequest trainingRequest);
         Task UpdateAsync(Guid ID, TrainingRequest trainingRequest);
         Task DeleteAsync(Guid ID);

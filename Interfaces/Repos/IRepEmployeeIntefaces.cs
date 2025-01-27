@@ -6,7 +6,7 @@ namespace HMC_Project.Interfaces.Repos
     public interface IRepEmployeeintefaces
     {
         Task<Employee> GetByIDAsync(Guid EmployeeID);
-        Task<IEnumerable<Employee>> GetAllAsync();
+        Task<IEnumerable<EmployeeDTO>> GetAllAsync();
         Task<Employee> CreateAsync(Employee employee);
         Task UpdateAsync(Employee employee);
         Task DeleteAsync(Employee employee);

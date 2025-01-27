@@ -1,4 +1,5 @@
-﻿using HMC_Project.Interfaces.Repos;
+﻿using HMC_Project.Dtos;
+using HMC_Project.Interfaces.Repos;
 using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
@@ -20,15 +21,15 @@ namespace HMC_Project.Services
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Company>> GetAllAsync()
-        {
-            return await _companyRepository.GetAllAsync();
-        }
-
         public async Task<Company> GetByIDAsync(Guid companyID)
         {
             return await _companyRepository.GetByIDAsync(companyID);
         }
+        public async Task<IEnumerable<CompanyDTO>> GetAllAsync()
+        {
+            return await _companyRepository.GetAllAsync();
+        }
+
 
         public async Task<Company> CreateAsync(CompanyRequest companyRequest)
         {

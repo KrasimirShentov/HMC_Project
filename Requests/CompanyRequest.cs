@@ -9,7 +9,7 @@ namespace HMC_Project.Requests
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<AddressDto> Addresses { get; set; }
+        public List<AddressDTO> Addresses { get; set; }
 
     }
 }

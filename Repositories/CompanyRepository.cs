@@ -1,4 +1,5 @@
-﻿using HMC_Project.Interfaces.Repos;
+﻿using HMC_Project.Dtos;
+using HMC_Project.Interfaces.Repos;
 using HMC_Project.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,18 +16,43 @@ namespace HMC_Project.Repositories
         {
             _dbContext = dbContext;
         }
-
-        public async Task<IEnumerable<Company>> GetAllAsync()
+        public async Task<IEnumerable<CompanyDTO>> GetAllAsync()
         {
-            return await _dbContext.Companies.Include(c => c.Departments).Include(c => c.Addresses).ToListAsync();
+            return await _dbContext.Companies
+                .Include(c => c.Departments)
+                .Include(c => c.Addresses)
+                .Select(c => new CompanyDTO
+                {
+                    Id = c.ID,
+                    Name = c.Name,
+                    Description = c.Description,
+                    Departments = c.Departments
+                        .Select(d => new DepartmentDTO
+                        {
+                            ID = d.Id,
+                            Name = d.Name,
+                            Description = d.Description,
+                            Type = d.Type,
+                            Email = d.Email,
+                            PhoneNumber = d.PhoneNumber
+                        }).ToList(),
+                    Addresses = c.Addresses
+                        .Select(a => new AddressDTO
+                        {
+                            AddressName = a.AddressName
+                        }).ToList()
+                })
+                .ToListAsync();
         }
+
+
 
         public async Task<Company> GetByIDAsync(Guid companyID)
         {
             return await _dbContext.Companies
-                                   .Include(c => c.Departments)
-                                   .Include(c => c.Addresses)
-                                   .SingleOrDefaultAsync(c => c.ID == companyID);
+                .Include(c => c.Departments)
+                .Include(c => c.Addresses)
+                .FirstOrDefaultAsync(c => c.ID == companyID);
         }
 
         public async Task<Company> CreateAsync(Company company)

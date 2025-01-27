@@ -1,4 +1,5 @@
-﻿using HMC_Project.Interfaces.Repos;
+﻿using HMC_Project.Dtos;
+using HMC_Project.Interfaces.Repos;
 using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
@@ -18,13 +19,25 @@ namespace HMC_Project.Repositories
         {
             return await _dbContext.Departments.FindAsync(DepartmentID);
         }
-        public async Task<IEnumerable<Department>> GetAllAsync()
+        public async Task<IEnumerable<DepartmentDTO>> GetAllAsync()
         {
             return await _dbContext.Departments
-                .Include(c => c.Company)
-                .ToListAsync();
+            .Include(d => d.Company)
+            .Select(d => new DepartmentDTO
+            {
+                ID = d.Id,
+                Name = d.Name,
+                Email = d.Email,
+                Type = d.Type,
+                PhoneNumber = d.PhoneNumber,
+                Description = d.Description,
+                CompanyID = d.Company.ID,
+                CompanyName = d.Company.Name,
+                CompanyDescription = d.Company.Description
+            })
+            .ToListAsync();
         }
-        public async Task<Department> CreateAsync (Department department)
+        public async Task<Department> CreateAsync(Department department)
         {
             _dbContext.Add(department);
             await _dbContext.SaveChangesAsync();

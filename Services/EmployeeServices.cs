@@ -33,7 +33,7 @@ namespace HMC_Project.Services
             return result;
         }
 
-        public async Task<IEnumerable<Employee>> GetAllAsync()
+        public async Task<IEnumerable<EmployeeDTO>> GetAllAsync()
         {
             return await _employeeRepo.GetAllAsync();
         }

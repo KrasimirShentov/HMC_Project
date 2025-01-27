@@ -1,6 +1,6 @@
 ﻿namespace HMC_Project.Dtos
 {
-    public class AddressDto
+    public class AddressDTO
     {
         public string AddressName { get; set; }
     }

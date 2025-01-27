@@ -26,7 +26,7 @@ namespace HMC_Project.Services
             }
             return result;
         }
-        public async Task<IEnumerable<Training>> GetAllAsync()
+        public async Task<IEnumerable<TrainingDTO>> GetAllAsync()
         {
             return await _repTrainingInterface.GetAllAsync();
         }

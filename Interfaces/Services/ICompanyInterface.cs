@@ -1,4 +1,5 @@
-﻿using HMC_Project.Models;
+﻿using HMC_Project.Dtos;
+using HMC_Project.Models;
 using HMC_Project.Requests;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace HMC_Project.Interfaces.Services
     public interface ICompanyInterface
     {
         Task<Company> GetByIDAsync(Guid companyID);
-        Task<IEnumerable<Company>> GetAllAsync();
+        Task<IEnumerable<CompanyDTO>> GetAllAsync();
         Task<Company> CreateAsync(CompanyRequest companyRequest);
         Task UpdateAsync(Guid companyID, CompanyRequest companyRequest);
         Task DeleteAsync(Guid companyID);

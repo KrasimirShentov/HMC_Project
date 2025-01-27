@@ -11,6 +11,6 @@ namespace HMC_Project.Dtos
         public string Email { get; set; }
         public GenderType Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public List<AddressDto> Addresses { get; set; }
+        public List<AddressDTO> Addresses { get; set; }
     }
 }
