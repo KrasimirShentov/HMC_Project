@@ -7,8 +7,6 @@ namespace HMC_Project.Models
     public class Address
     {
         [Key]
-        public Guid ID { get; set; }
-
         [Required, MaxLength(255)]
         public string AddressName { get; set; }
 
@@ -24,8 +22,7 @@ namespace HMC_Project.Models
             EmployeeAddresses = new HashSet<EmployeeAddress>();
         }
         public Address(string addressName, Guid userID)
-        {
-            ID = Guid.NewGuid();
+        { 
             UserID = userID;
             AddressName = addressName;
             DepartmentAddresses = new HashSet<DepartmentAddress>();

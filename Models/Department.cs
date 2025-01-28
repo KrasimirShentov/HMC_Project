@@ -26,7 +26,6 @@ namespace HMC_Project.Models
 
         [JsonIgnore]
         public virtual ICollection<DepartmentAddress> DepartmentAddresses { get; private set; }
-        //[JsonIgnore]
         public virtual Company Company { get; set; }
 
         public Department()

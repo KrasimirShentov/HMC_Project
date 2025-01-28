@@ -17,7 +17,7 @@ namespace HMC_Project.Services
             _departmentRepo = departmentRepo;
             _dbContext = hMCDbContext;
         }
-        public async Task<Department> GetByIDAsync(Guid DepartmentID)
+        public async Task<DepartmentDTO> GetByIDAsync(Guid DepartmentID)
         {
             var result = await _departmentRepo.GetByIDAsync(DepartmentID);
 
@@ -56,9 +56,39 @@ namespace HMC_Project.Services
                 Company = company
             };
 
-            _dbContext.Add(newDepartment);
-            await _dbContext.SaveChangesAsync();
+            //if (departmentRequest.DepartmentAddresses != null && departmentRequest.DepartmentAddresses.Count > 0)
+            //{
+            //    foreach (var addressName in departmentRequest.DepartmentAddresses)
+            //    {
+            //        var address = await _dbContext.Addresses.FirstOrDefaultAsync(a => a.AddressName == addressName);
+            //        if (address == null)
+            //        {
+            //            address = new Address
+            //            {
+            //                AddressName = addressName
+            //            };
+            //            _dbContext.Addresses.Add(address);
+            //        }
 
+            //        var departmentAddress = new DepartmentAddress
+            //        {
+            //            Department = newDepartment,
+            //            Address = address
+            //        };
+            //        _dbContext.DepartmentAddresses.Add(departmentAddress);
+            //    }
+            //}
+
+            _dbContext.Add(newDepartment);
+            //try
+            //{
+                await _dbContext.SaveChangesAsync();
+            //}
+            //catch(Exception ex)
+            //{
+            //    Console.WriteLine(ex.InnerException?.Message);
+            //    throw;
+            //}
             return newDepartment;
         }
         public async Task UpdateAsync(Guid ID, DepartmentRequest departmentRequest)

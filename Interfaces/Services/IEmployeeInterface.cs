@@ -5,7 +5,7 @@ namespace HMC_Project.Interfaces.Services
 {
     public interface IEmployeeInterface
     {
-        Task<Employee> GetByIDAsync(Guid EmployeeID);
+        Task<EmployeeDTO> GetByIDAsync(Guid EmployeeID);
         Task<IEnumerable<EmployeeDTO>> GetAllAsync();
         Task<Employee> CreateAsync(EmployeeRequest employeeRequest);
         Task UpdateAsync(Guid ID,EmployeeRequest employeeRequest);

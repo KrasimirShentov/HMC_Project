@@ -14,9 +14,40 @@ namespace HMC_Project.Repositories
         {
             _dbContext = hMCDbContext;
         }
-        public async Task<Employee> GetByIDAsync(Guid EmployeeID)
+        public async Task<EmployeeDTO> GetByIDAsync(Guid EmployeeID)
         {
-            return await _dbContext.Employees.FindAsync(EmployeeID);
+            return await _dbContext.Employees
+        .Include(e => e.Department)
+        .Include(e => e.Training)
+        .Where(e => e.ID == EmployeeID)
+        .Select(e => new EmployeeDTO
+        {
+            Id = e.ID,
+            Name = e.Name,
+            Surname = e.Surname,
+            Age = e.Age,
+            Email = e.Email,
+            Position = e.Position,
+            Gender = e.Gender,
+            DepartmentDTO = new DepartmentDTO
+            {
+                ID = e.Department.Id,
+                Name = e.Department.Name,
+                Email = e.Department.Email,
+                Type = e.Department.Type,
+                PhoneNumber = e.Department.PhoneNumber,
+                Description = e.Department.Description
+            },
+            TrainingDTO = new TrainingDTO
+            {
+                Id = e.Training.ID,
+                Type = e.Training.Type,
+                PositionName = e.Training.PositionName,
+                Description = e.Training.Description,
+                TrainingHours = e.Training.TrainingHours
+            }
+        })
+        .FirstOrDefaultAsync();
         }
         public async Task<IEnumerable<EmployeeDTO>> GetAllAsync()
         {

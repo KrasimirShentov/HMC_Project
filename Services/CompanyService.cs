@@ -21,7 +21,7 @@ namespace HMC_Project.Services
             _dbContext = dbContext;
         }
 
-        public async Task<Company> GetByIDAsync(Guid companyID)
+        public async Task<CompanyDTO> GetByIDAsync(Guid companyID)
         {
             return await _companyRepository.GetByIDAsync(companyID);
         }
@@ -46,12 +46,25 @@ namespace HMC_Project.Services
                 Description = companyRequest.Description,
             };
 
-            return await _companyRepository.CreateAsync(company);
+            //foreach (var addressRequest in companyRequest.C_Addresses)
+            //{
+            //    var address = new Address
+            //    {
+            //        AddressName = addressRequest.AddressName,
+            //        CompanyID = company.ID 
+            //    };
+            //    _dbContext.Addresses.Add(address);
+            //}
+
+            await _companyRepository.CreateAsync(company);
+            await _dbContext.SaveChangesAsync();
+
+            return company;
         }
 
         public async Task UpdateAsync(Guid companyID, CompanyRequest companyRequest)
         {
-            var company = await _companyRepository.GetByIDAsync(companyID);
+            var company = await _dbContext.Companies.FirstOrDefaultAsync(c => c.ID == companyID);
             if (company == null)
             {
                 throw new KeyNotFoundException("Company not found");

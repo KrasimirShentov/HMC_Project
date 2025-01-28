@@ -8,7 +8,7 @@ namespace HMC_Project.Interfaces.Repos
 {
     public interface IRepCompanyInterface
     {
-        Task<Company> GetByIDAsync(Guid companyID);
+        Task<CompanyDTO> GetByIDAsync(Guid companyID);
         Task<IEnumerable<CompanyDTO>> GetAllAsync();
         Task<Company> CreateAsync(Company company);
         Task UpdateAsync(Guid companyID, Company company);

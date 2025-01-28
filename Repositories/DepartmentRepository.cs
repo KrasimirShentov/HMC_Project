@@ -4,6 +4,7 @@ using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
 using HMC_Project.Requests;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Versioning;
 using System.ComponentModel;
 
 namespace HMC_Project.Repositories
@@ -15,14 +16,35 @@ namespace HMC_Project.Repositories
         {
             _dbContext = hMCDbContext;
         }
-        public async Task<Department> GetByIDAsync(Guid DepartmentID)
+        public async Task<DepartmentDTO> GetByIDAsync(Guid DepartmentID)
         {
-            return await _dbContext.Departments.FindAsync(DepartmentID);
+            var department = await _dbContext.Departments
+        .Include(d => d.Company)
+        .FirstOrDefaultAsync(d => d.Id == DepartmentID);
+
+            if (department == null)
+            {
+                return null;
+            }
+
+            return new DepartmentDTO
+            {
+                ID = department.Id,
+                Name = department.Name,
+                Email = department.Email,
+                Type = department.Type,
+                PhoneNumber = department.PhoneNumber,
+                Description = department.Description,
+                CompanyID = department.Company.ID,
+                CompanyName = department.Company.Name,
+                CompanyDescription = department.Company.Description
+            };
         }
         public async Task<IEnumerable<DepartmentDTO>> GetAllAsync()
         {
             return await _dbContext.Departments
             .Include(d => d.Company)
+            .Include(d => d.DepartmentAddresses)
             .Select(d => new DepartmentDTO
             {
                 ID = d.Id,
@@ -33,7 +55,11 @@ namespace HMC_Project.Repositories
                 Description = d.Description,
                 CompanyID = d.Company.ID,
                 CompanyName = d.Company.Name,
-                CompanyDescription = d.Company.Description
+                CompanyDescription = d.Company.Description,
+                DTOAddresses = d.DepartmentAddresses.Select(da => new AddressDTO
+                {
+                    AddressName = da.Address.AddressName
+                }).ToList()
             })
             .ToListAsync();
         }

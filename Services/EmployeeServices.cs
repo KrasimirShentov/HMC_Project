@@ -22,7 +22,7 @@ namespace HMC_Project.Services
             _dbContext = dbContext;
         }
 
-        public async Task<Employee> GetByIDAsync(Guid employeeId)
+        public async Task<EmployeeDTO> GetByIDAsync(Guid employeeId)
         {
             var result = await _employeeRepo.GetByIDAsync(employeeId);
 

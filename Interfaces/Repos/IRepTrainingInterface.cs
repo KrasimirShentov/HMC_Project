@@ -5,7 +5,7 @@ namespace HMC_Project.Interfaces.Repos
 {
     public interface IRepTrainingInterface
     {
-        Task<Training> GetByIDAsync(Guid TrainingID);
+        Task<TrainingDTO> GetByIDAsync(Guid TrainingID);
         Task<IEnumerable<TrainingDTO>> GetAllAsync();
 
         Task<Training> CreateAsync(Training training);

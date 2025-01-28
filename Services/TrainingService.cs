@@ -16,7 +16,7 @@ namespace HMC_Project.Services
             _repTrainingInterface = repTrainingInterface;
             _dbContext = hMCDbContext;
         }
-        public async Task<Training> GetByIDAsync(Guid TrainingID)
+        public async Task<TrainingDTO> GetByIDAsync(Guid TrainingID)
         {
             var result = await _repTrainingInterface.GetByIDAsync(TrainingID);
 

@@ -16,6 +16,24 @@ namespace HMC_Project.Repositories
         {
             _dbContext = dbContext;
         }
+        public async Task<CompanyDTO> GetByIDAsync(Guid companyID)
+        {
+            return await _dbContext.Companies
+        .Include(c => c.Departments)
+        .Where(c => c.ID == companyID)
+        .Select(c => new CompanyDTO
+        {
+            Id = c.ID,
+            Name = c.Name,
+            Description = c.Description,
+            Departments = c.Departments.Select(d => new DepartmentDTO
+            {
+                ID = d.Id,
+                Name = d.Name,
+                Description = d.Description
+            }).ToList()
+        }).FirstOrDefaultAsync();
+        }
         public async Task<IEnumerable<CompanyDTO>> GetAllAsync()
         {
             return await _dbContext.Companies
@@ -47,13 +65,6 @@ namespace HMC_Project.Repositories
 
 
 
-        public async Task<Company> GetByIDAsync(Guid companyID)
-        {
-            return await _dbContext.Companies
-                .Include(c => c.Departments)
-                .Include(c => c.Addresses)
-                .FirstOrDefaultAsync(c => c.ID == companyID);
-        }
 
         public async Task<Company> CreateAsync(Company company)
         {
@@ -70,7 +81,7 @@ namespace HMC_Project.Repositories
 
         public async Task DeleteAsync(Guid companyID)
         {
-            var company = await GetByIDAsync(companyID);
+            var company = await _dbContext.Companies.FirstOrDefaultAsync(c => c.ID == companyID);
             if (company != null)
             {
                 _dbContext.Companies.Remove(company);

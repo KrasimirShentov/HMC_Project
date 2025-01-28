@@ -9,7 +9,7 @@ namespace HMC_Project.Interfaces.Services
 {
     public interface ICompanyInterface
     {
-        Task<Company> GetByIDAsync(Guid companyID);
+        Task<CompanyDTO> GetByIDAsync(Guid companyID);
         Task<IEnumerable<CompanyDTO>> GetAllAsync();
         Task<Company> CreateAsync(CompanyRequest companyRequest);
         Task UpdateAsync(Guid companyID, CompanyRequest companyRequest);

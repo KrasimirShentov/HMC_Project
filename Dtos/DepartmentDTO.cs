@@ -10,6 +10,7 @@ namespace HMC_Project.Dtos
         public string Type { get; set; }
         public string PhoneNumber { get; set; }
         public string Description { get; set; }
+        public List<AddressDTO> DTOAddresses { get; set; }
         public Guid CompanyID { get; set; }
         public string CompanyName { get; set; }
         public string CompanyDescription { get; set; }

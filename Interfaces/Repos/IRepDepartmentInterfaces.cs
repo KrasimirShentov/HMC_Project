@@ -6,7 +6,7 @@ namespace HMC_Project.Interfaces.Repos
 {
     public interface IRepDepartmentInterfaces
     {
-        Task<Department> GetByIDAsync(Guid DepartmentID);
+        Task<DepartmentDTO> GetByIDAsync(Guid DepartmentID);
         Task<IEnumerable<DepartmentDTO>> GetAllAsync();
         Task<Department> CreateAsync(Department department);
         Task UpdateAsync(Department department);
