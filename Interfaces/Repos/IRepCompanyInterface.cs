@@ -11,7 +11,7 @@ namespace HMC_Project.Interfaces.Repos
         Task<CompanyDTO> GetByIDAsync(Guid companyID);
         Task<IEnumerable<CompanyDTO>> GetAllAsync();
         Task<Company> CreateAsync(Company company);
-        Task UpdateAsync(Guid companyID, Company company);
+        Task UpdateAsync(Company company);
         Task DeleteAsync(Guid companyID);
     }
 }

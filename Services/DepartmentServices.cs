@@ -58,42 +58,47 @@ namespace HMC_Project.Services
 
             //if (departmentRequest.DepartmentAddresses != null && departmentRequest.DepartmentAddresses.Count > 0)
             //{
-            //    foreach (var addressName in departmentRequest.DepartmentAddresses)
-            //    {
-            //        var address = await _dbContext.Addresses.FirstOrDefaultAsync(a => a.AddressName == addressName);
-            //        if (address == null)
-            //        {
-            //            address = new Address
-            //            {
-            //                AddressName = addressName
-            //            };
-            //            _dbContext.Addresses.Add(address);
-            //        }
+                foreach (var addressName in departmentRequest.DepartmentAddresses)
+                {
+                    var address = await _dbContext.Addresses.FirstOrDefaultAsync(a => a.AddressName == addressName);
+                    if (address == null)
+                    {
+                        address = new Address
+                        {
+                            AddressName = addressName
+                        };
+                        _dbContext.Addresses.Add(address);
+                    }
 
-            //        var departmentAddress = new DepartmentAddress
-            //        {
-            //            Department = newDepartment,
-            //            Address = address
-            //        };
-            //        _dbContext.DepartmentAddresses.Add(departmentAddress);
-            //    }
+                    var departmentAddress = new DepartmentAddress
+                    {
+                        Department = newDepartment,
+                        Address = address
+                    };
+                    _dbContext.DepartmentAddresses.Add(departmentAddress);
+                }
             //}
 
-            _dbContext.Add(newDepartment);
             //try
             //{
+                _dbContext.Add(newDepartment);
                 await _dbContext.SaveChangesAsync();
             //}
-            //catch(Exception ex)
+            //catch (Exception ex)
             //{
             //    Console.WriteLine(ex.InnerException?.Message);
+            //    Console.WriteLine(ex.Message);
             //    throw;
             //}
+
             return newDepartment;
         }
         public async Task UpdateAsync(Guid ID, DepartmentRequest departmentRequest)
         {
-            var ExistingDeprt = await _departmentRepo.GetByIDAsync(ID);
+            var ExistingDeprt = await _dbContext.Departments
+                .Include(d => d.DepartmentAddresses)
+                .ThenInclude(da => da.Address)
+                .FirstOrDefaultAsync(d => d.Id == ID);
             if (ExistingDeprt == null)
             {
                 throw new ArgumentNullException("Department not found");
@@ -105,12 +110,44 @@ namespace HMC_Project.Services
             ExistingDeprt.Email = departmentRequest.Email;
             ExistingDeprt.PhoneNumber = departmentRequest.PhoneNumber;
 
+            //?????????????????????????????????????????????????????????????????
+            var existingDepartmentAddresses = ExistingDeprt.DepartmentAddresses.ToList();
+
+            for (int i = 0; i < existingDepartmentAddresses.Count; i++)
+            {
+                var departmentAddress = existingDepartmentAddresses[i];
+
+                string newAddressName = departmentRequest.DepartmentAddresses.ElementAtOrDefault(i);
+
+                if (newAddressName != null)
+                {
+                    departmentAddress.Address.AddressName = newAddressName;
+                }
+            }
+            //    else
+            //    {
+
+            //        var existingAddress = await _dbContext.Addresses
+            //            .FirstOrDefaultAsync(a => a.AddressName == newAddressName);
+
+            //        if (existingAddress != null)
+            //        {
+            //            departmentAddress = new DepartmentAddress
+            //            {
+            //                Department = ExistingDeprt,
+            //                Address = existingAddress
+            //            };
+            //            ExistingDeprt.DepartmentAddresses.Add(departmentAddress);
+            //        }
+            //     }     
+        
+
             _dbContext.Update(ExistingDeprt);
             await _dbContext.SaveChangesAsync();
         }
         public async Task DeleteAsync(Guid ID)
         {
-            var deprt = await _departmentRepo.GetByIDAsync(ID);
+            var deprt = await _dbContext.Departments.FindAsync(ID);
 
             if (deprt == null)
             {

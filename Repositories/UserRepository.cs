@@ -16,7 +16,7 @@ namespace HMC_Project.Repositories
 
         public async Task<User> GetByUsernameAsync(string username)
         {
-            return await _dbContext.Users.SingleOrDefaultAsync(u => u.UserName == username);
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
         }
 
         public async Task<User> RegisterAsync(User user)

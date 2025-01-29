@@ -13,7 +13,7 @@ namespace HMC_Project.Requests
         public string Email {  get; set; }
         public string PhoneNumber { get; set; }
         public Guid CompanyID { get; set; }
-        //public List<string> DepartmentAddresses { get; set; }
+        public List<string> DepartmentAddresses { get; set; }
 
     }
 }

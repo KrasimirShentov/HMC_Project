@@ -72,7 +72,7 @@ namespace HMC_Project.Controllers
 
             foreach (var addressDto in userDto.Addresses)
             {
-                var address = new Address(addressDto.AddressName, user.ID);
+                var address = new Address(addressDto.AddressName/*, user.ID*/);
                 _dbContext.Addresses.Add(address);
             }
 

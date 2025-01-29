@@ -55,7 +55,7 @@ namespace HMC_Project.Services
         }
         public async Task UpdateAsync(Guid ID, TrainingRequest trainingRequest)
         {
-            var existingTraining = await _repTrainingInterface.GetByIDAsync(ID);
+            var existingTraining = await _dbContext.Training.FindAsync(ID);
             if (existingTraining == null)
             {
                 throw new ArgumentNullException(nameof(trainingRequest));
@@ -71,7 +71,7 @@ namespace HMC_Project.Services
         }
         public async Task DeleteAsync(Guid TrainingID)
         {
-            var _training = await _repTrainingInterface.GetByIDAsync(TrainingID);
+            var _training = await _dbContext.Training.FindAsync(TrainingID);
 
             if (_training == null)
             {

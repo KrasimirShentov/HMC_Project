@@ -3,6 +3,7 @@ using System;
 using HMC_Project.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HMC_Project.Migrations
 {
     [DbContext(typeof(HMCDbContext))]
-    partial class HMCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250128142556_addressnullable")]
+    partial class addressnullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,7 +286,7 @@ namespace HMC_Project.Migrations
                     b.HasOne("HMC_Project.Models.Company", "Company")
                         .WithMany("Addresses")
                         .HasForeignKey("CompanyID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("HMC_Project.Models.User", "User")
                         .WithMany("Addresses")

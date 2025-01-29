@@ -18,27 +18,26 @@ namespace HMC_Project.Repositories
         }
         public async Task<DepartmentDTO> GetByIDAsync(Guid DepartmentID)
         {
-            var department = await _dbContext.Departments
-        .Include(d => d.Company)
-        .FirstOrDefaultAsync(d => d.Id == DepartmentID);
-
-            if (department == null)
-            {
-                return null;
-            }
-
-            return new DepartmentDTO
-            {
-                ID = department.Id,
-                Name = department.Name,
-                Email = department.Email,
-                Type = department.Type,
-                PhoneNumber = department.PhoneNumber,
-                Description = department.Description,
-                CompanyID = department.Company.ID,
-                CompanyName = department.Company.Name,
-                CompanyDescription = department.Company.Description
-            };
+            return await _dbContext.Departments
+                .Include(d => d.Company)
+                .Include(d => d.DepartmentAddresses)
+                .Select(d => new DepartmentDTO
+                {
+                    ID = d.Id,
+                    Name = d.Name,
+                    Email = d.Email,
+                    Type = d.Type,
+                    PhoneNumber = d.PhoneNumber,
+                    Description = d.Description,
+                    CompanyID = d.Company.ID,
+                    CompanyName = d.Company.Name,
+                    CompanyDescription = d.Company.Description,
+                    DTOAddresses = d.DepartmentAddresses.Select(da => new AddressDTO
+                    {
+                        AddressName = da.Address.AddressName
+                    }).ToList()
+                })
+            .FirstOrDefaultAsync();
         }
         public async Task<IEnumerable<DepartmentDTO>> GetAllAsync()
         {

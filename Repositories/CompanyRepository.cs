@@ -31,7 +31,13 @@ namespace HMC_Project.Repositories
                 ID = d.Id,
                 Name = d.Name,
                 Description = d.Description
-            }).ToList()
+            }).ToList(),
+            Addresses = c.Addresses
+            .Select(ca => new AddressDTO
+            {
+                AddressName = ca.AddressName
+            })
+            .ToList()
         }).FirstOrDefaultAsync();
         }
         public async Task<IEnumerable<CompanyDTO>> GetAllAsync()
@@ -73,9 +79,9 @@ namespace HMC_Project.Repositories
             return company;
         }
 
-        public async Task UpdateAsync(Guid companyID, Company company)
+        public async Task UpdateAsync(Company company)
         {
-            _dbContext.Companies.Update(company);
+            _dbContext.Entry(company).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
 

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace HMC_Project.Services
 {
@@ -29,8 +30,6 @@ namespace HMC_Project.Services
         {
             return await _companyRepository.GetAllAsync();
         }
-
-
         public async Task<Company> CreateAsync(CompanyRequest companyRequest)
         {
             var existingCompany = await _dbContext.Companies.FirstOrDefaultAsync(c => c.Name == companyRequest.Name);
@@ -39,28 +38,40 @@ namespace HMC_Project.Services
                 throw new ArgumentException("Company with the same name already exists.");
             }
 
-            var company = new Company
+            var newCompany = new Company
             {
                 ID = Guid.NewGuid(),
                 Name = companyRequest.Name,
                 Description = companyRequest.Description,
             };
 
-            //foreach (var addressRequest in companyRequest.C_Addresses)
-            //{
-            //    var address = new Address
-            //    {
-            //        AddressName = addressRequest.AddressName,
-            //        CompanyID = company.ID 
-            //    };
-            //    _dbContext.Addresses.Add(address);
-            //}
+            foreach (var addressDto in companyRequest.Addresses)
+            {
+                // Check if the address already exists in the database
+                var existingAddress = await _dbContext.Addresses
+                    .FirstOrDefaultAsync(a => a.AddressName == addressDto.AddressName);
 
-            await _companyRepository.CreateAsync(company);
+                if (existingAddress == null)
+                {
+                    var newAddress = new Address
+                    {
+                        AddressName = addressDto.AddressName,
+                        Company = newCompany
+                    };
+                    newCompany.Addresses.Add(newAddress);
+                }
+                else
+                {
+                    newCompany.Addresses.Add(existingAddress);
+                }
+            }
+
+            await _companyRepository.CreateAsync(newCompany);
             await _dbContext.SaveChangesAsync();
 
-            return company;
+            return newCompany;
         }
+
 
         public async Task UpdateAsync(Guid companyID, CompanyRequest companyRequest)
         {
@@ -72,12 +83,22 @@ namespace HMC_Project.Services
 
             company.Name = companyRequest.Name;
             company.Description = companyRequest.Description;
-            await _companyRepository.UpdateAsync(companyID, company);
+
+            _dbContext.Update(company);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Guid companyID)
+        public async Task DeleteAsync(Guid ID)
         {
-            await _companyRepository.DeleteAsync(companyID);
+            var delCompany = await _dbContext.Companies.FindAsync(ID);
+
+            if (delCompany == null)
+            {
+                throw new ArgumentNullException(nameof(delCompany));
+            }
+
+            _dbContext.Companies.Remove(delCompany);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

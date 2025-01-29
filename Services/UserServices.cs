@@ -22,7 +22,14 @@ namespace HMC_Project.Services
         }
         public async Task<User> GetUserByUsernameAsync(string username)
         {
-            return await _userRepository.GetByUsernameAsync(username);
+            var existingUser = await _userRepository.GetByUsernameAsync(username);
+
+            if (existingUser == null)
+            {
+                throw new ArgumentNullException(nameof(existingUser));
+            }
+
+            return existingUser;
         }
         public async Task<string> AuthenticateAsync(string username, string password)
         {

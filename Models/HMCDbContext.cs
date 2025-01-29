@@ -37,7 +37,7 @@ namespace HMC_Project.Models
                 .HasOne(e => e.Department)
                 .WithMany()
                 .HasForeignKey("DepartmentId");
-
+                
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Addresses)
@@ -70,22 +70,17 @@ namespace HMC_Project.Models
                 .WithMany(d => d.EmployeeAddresses)
                 .HasForeignKey(da => da.EmployeeID);
 
-            //modelBuilder.Entity<Company>()
-            //    .HasMany(c => c.Departments)
-            //    .WithOne(d => d.Company)
-            //    .HasForeignKey(d => d.CompanyID)
-            //    .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<Company>()
                 .HasMany(c => c.Addresses)
                 .WithOne(c => c.Company)
-                .HasForeignKey(a => a.CompanyID);
+                .HasForeignKey(a => a.CompanyID)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Address>()
                 .HasOne(a => a.Company)
                 .WithMany(c => c.Addresses)
                 .HasForeignKey(a => a.CompanyID)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Training>(entity =>
             {

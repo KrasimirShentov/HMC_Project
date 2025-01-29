@@ -80,7 +80,7 @@ namespace HMC_Project.Services
 
         public async Task UpdateAsync(Guid ID, EmployeeRequest employeeRequest)
         {
-            var existingEmployee = await _employeeRepo.GetByIDAsync(ID);
+            var existingEmployee = await _dbContext.Employees.FindAsync(ID);
             if (existingEmployee == null)
             {
                 throw new ArgumentException("Employee not found.");
@@ -99,7 +99,7 @@ namespace HMC_Project.Services
 
         public async Task DeleteAsync(Guid ID)
         {
-            var existingEmployee = await _employeeRepo.GetByIDAsync(ID);
+            var existingEmployee = await _dbContext.Employees.FindAsync(ID);
             if (existingEmployee == null)
             {
                 throw new ArgumentException("Employee not found.");

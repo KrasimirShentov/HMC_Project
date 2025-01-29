@@ -86,7 +86,7 @@ namespace HMC_Project.Controllers
         {
             try
             {
-                await _departmentService.DeleteAsync(ID);
+                await _departmentService.DeleteAsync(ID);   
                 return Ok();
             }
             catch (InvalidOperationException ex)
