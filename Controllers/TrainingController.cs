@@ -8,7 +8,7 @@ namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class TrainingController : Controller
     {
         private readonly ITrainingInterface _trainingInterface;
@@ -41,7 +41,7 @@ namespace HMC_Project.Controllers
             }
             catch (Exception ex)
             {
-                throw new ArgumentNullException();
+                return StatusCode(500, ex.Message);
             }
         }
 

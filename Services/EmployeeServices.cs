@@ -40,39 +40,47 @@ namespace HMC_Project.Services
 
         public async Task<Employee> CreateAsync(EmployeeRequest employeeRequest)
         {
+            if (employeeRequest == null)
+            {
+                throw new ArgumentNullException(nameof(employeeRequest), "Employee request data is missing.");
+            }
+
             var existingEmployee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.Email == employeeRequest.Email);
             if (existingEmployee != null)
             {
-                throw new ArgumentException("Employee with the same email already exists.");
+                throw new ArgumentException($"Employee with the email '{employeeRequest.Email}' already exists.");
             }
 
             var department = await _dbContext.Departments.FindAsync(employeeRequest.DepartmentId);
             if (department == null)
             {
-                throw new ArgumentException("Invalid Department ID");
+                throw new ArgumentException($"Invalid Department ID: '{employeeRequest.DepartmentId}'. Department not found.");
             }
 
             var training = await _dbContext.Training.FindAsync(employeeRequest.TrainingId);
             if (training == null)
             {
-                throw new ArgumentException("Invalid Training ID");
+                throw new Exception("Training with given ID does not exist.");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"Found Training ID: {training.ID}");
             }
 
             var newEmployee = new Employee
             {
-                ID = Guid.NewGuid(),
+                ID = Guid.NewGuid(), 
                 Name = employeeRequest.Name,
                 Surname = employeeRequest.Surname,
                 Age = employeeRequest.Age,
                 Email = employeeRequest.Email,
                 Position = employeeRequest.Position,
+                Gender = employeeRequest.Gender,
                 Department = department,
-                Training = training
+                TrainingID = employeeRequest.TrainingId
             };
 
-            training.Employees.Add(newEmployee);
-
-            _dbContext.Add(newEmployee);
+            _dbContext.Employees.Add(newEmployee);
             await _dbContext.SaveChangesAsync();
 
             return newEmployee;

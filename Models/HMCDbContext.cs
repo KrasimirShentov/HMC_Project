@@ -11,7 +11,6 @@ namespace HMC_Project.Models
         {
             _configuration = configuration;
         }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(_configuration.GetConnectionString("HMC"));
@@ -22,6 +21,7 @@ namespace HMC_Project.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<DepartmentAddress> DepartmentAddresses { get; set; }
+        public DbSet<EmployeeAddress> employeeAddresses { get; set; }
         public DbSet<Training> Training { get; set; }
         public DbSet<Company> Companies { get; set; }
 
@@ -29,15 +29,14 @@ namespace HMC_Project.Models
         {
             modelBuilder.Entity<Employee>()
                 .HasOne(e => e.Training)
-                .WithMany()
-                .HasForeignKey("TrainingId")
+                .WithMany(t => t.Employees) 
+                .HasForeignKey(e => e.TrainingID)
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Employee>()
                 .HasOne(e => e.Department)
                 .WithMany()
                 .HasForeignKey("DepartmentId");
-                
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Addresses)
@@ -52,13 +51,16 @@ namespace HMC_Project.Models
                 .HasOne(a => a.User)
                 .WithMany(u => u.Addresses)
                 .HasForeignKey(a => a.UserID);
+            modelBuilder.Entity<Department>()
+                .HasMany(d => d.employees)       // The navigation property in Department model
+                .WithOne(e => e.Department)      // The navigation property in Employee model
+                .HasForeignKey(e => e.DepartmentId);
 
             modelBuilder.Entity<DepartmentAddress>()
                 .HasKey(da => new { da.DepartmentID, da.AddressID });
 
             modelBuilder.Entity<EmployeeAddress>()
                 .HasKey(da => new { da.EmployeeID, da.AddressID });
-
 
             modelBuilder.Entity<DepartmentAddress>()
                 .HasOne(da => da.Department)

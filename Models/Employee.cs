@@ -19,11 +19,13 @@ namespace HMC_Project.Models
         [Required, MaxLength(32)]
         public string Position { get; set; }
         [Required]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public GenderType Gender { get; set; }
         [Required]
-        public virtual Training Training { get; set; }
-        [Required]
-        public virtual Department Department { get; set; }
+        public Guid DepartmentId { get; set; }
+        public Department Department { get; set; }
+        public Guid? TrainingID { get; set; }
+        public Training Training { get; set; }
         public DateTime Birthday { get; set; }
 
         public DateTime HireDate { get; set; }

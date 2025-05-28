@@ -20,11 +20,7 @@ namespace HMC_Project.Models
 
         [Required, MaxLength(32)]
         public string PhoneNumber { get; set; }
-
-        [JsonIgnore]
         public List<Employee> employees { get; set; }
-
-        [JsonIgnore]
         public virtual ICollection<DepartmentAddress> DepartmentAddresses { get; private set; }
         public virtual Company Company { get; set; }
 

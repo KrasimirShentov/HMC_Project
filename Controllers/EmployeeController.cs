@@ -10,7 +10,7 @@ namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class EmployeeController : Controller
     {
         private readonly IEmployeeInterface _employeeService;
@@ -49,24 +49,41 @@ namespace HMC_Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] EmployeeRequest _employeeRequest)
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] EmployeeRequest employeeRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                await _employeeService.CreateAsync(_employeeRequest);
-                return Ok(_employeeRequest);
+                var newEmployee = await _employeeService.CreateAsync(employeeRequest);
+                return CreatedAtAction(nameof(GetByID), new { ID = newEmployee.ID }, newEmployee);
             }
             catch (ArgumentException ex)
             {
-                return Forbid(ex.Message);
+                if (ex.Message.Contains("already exists"))
+                {
+                    return Conflict(ex.Message);
+                }
+                else
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             catch (InvalidOperationException ex)
             {
-                return Conflict(ex.Message);
+                return BadRequest(ex.Message);
             }
+            //catch (Exception ex)
+            //{
+            //    return StatusCode(500, $"An internal server error occurred: {ex.Message}");
+            //}
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception("Failed to create employee: " + ex.Message + " | Inner: " + ex.InnerException?.Message, ex);
             }
         }
 

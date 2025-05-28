@@ -1,11 +1,7 @@
 ﻿using HMC_Project.Dtos;
 using HMC_Project.Interfaces.Repos;
-using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
-using HMC_Project.Requests;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Versioning;
-using System.ComponentModel;
 
 namespace HMC_Project.Repositories
 {
@@ -18,32 +14,61 @@ namespace HMC_Project.Repositories
         }
         public async Task<DepartmentDTO> GetByIDAsync(Guid DepartmentID)
         {
-            return await _dbContext.Departments
+            var departmentEntity = await _dbContext.Departments
                 .Include(d => d.Company)
                 .Include(d => d.DepartmentAddresses)
-                .Select(d => new DepartmentDTO
+                    .ThenInclude(da => da.Address)
+                .Include(d => d.employees) // This line should load employees
+                    .ThenInclude(e => e.Training)
+                .Where(d => d.Id == DepartmentID)
+                .FirstOrDefaultAsync(); // Execute the query and get the entity here
+
+            // <--- PUT A BREAKPOINT ON THIS LINE
+
+            if (departmentEntity == null)
+            {
+                return null; // Or throw an appropriate exception
+            }
+
+            // Now, inspect 'departmentEntity.employees' in your debugger.
+            // Does it contain the employee you expect? Is it empty?
+
+            return new DepartmentDTO
+            {
+                ID = departmentEntity.Id,
+                Name = departmentEntity.Name,
+                // ... map other properties from departmentEntity
+                Addresses = departmentEntity.DepartmentAddresses.Select(da => new AddressDTO
                 {
-                    ID = d.Id,
-                    Name = d.Name,
-                    Email = d.Email,
-                    Type = d.Type,
-                    PhoneNumber = d.PhoneNumber,
-                    Description = d.Description,
-                    CompanyID = d.Company.ID,
-                    CompanyName = d.Company.Name,
-                    CompanyDescription = d.Company.Description,
-                    DTOAddresses = d.DepartmentAddresses.Select(da => new AddressDTO
+                    AddressName = da.Address.AddressName
+                }).ToList(),
+                Employees = departmentEntity.employees?.Select(e => new EmployeeDTO // Use null conditional operator here too
+                {
+                    Id = e.ID,
+                    Name = e.Name,
+                    Surname = e.Surname,
+                    Age = e.Age,
+                    Email = e.Email,
+                    Position = e.Position,
+                    Gender = e.Gender,
+                    TrainingDTO = e.Training != null ? new TrainingDTO
                     {
-                        AddressName = da.Address.AddressName
-                    }).ToList()
-                })
-            .FirstOrDefaultAsync();
+                        Id = e.Training.ID,
+                        Type = e.Training.Type,
+                        PositionName = e.Training.PositionName,
+                        Description = e.Training.Description,
+                        TrainingHours = e.Training.TrainingHours
+                    } : null
+                }).ToList()
+            };
         }
         public async Task<IEnumerable<DepartmentDTO>> GetAllAsync()
         {
             return await _dbContext.Departments
             .Include(d => d.Company)
             .Include(d => d.DepartmentAddresses)
+                .ThenInclude(da => da.Address)
+            .Include(d => d.employees)
             .Select(d => new DepartmentDTO
             {
                 ID = d.Id,
@@ -55,9 +80,14 @@ namespace HMC_Project.Repositories
                 CompanyID = d.Company.ID,
                 CompanyName = d.Company.Name,
                 CompanyDescription = d.Company.Description,
-                DTOAddresses = d.DepartmentAddresses.Select(da => new AddressDTO
+                Addresses = d.DepartmentAddresses.Select(da => new AddressDTO
                 {
                     AddressName = da.Address.AddressName
+                }).ToList(),
+                Employees = d.employees.Select(e => new EmployeeDTO // Map employees for GetAll, but keep it light
+                {
+                    Id = e.ID,
+                    Name = e.Name, // Or just Id for count
                 }).ToList()
             })
             .ToListAsync();

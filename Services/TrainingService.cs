@@ -41,7 +41,7 @@ namespace HMC_Project.Services
 
             var newTraining = new Training
             {
-                ID = trainingRequest.ID,
+                //ID = trainingRequest.ID,
                 Type = trainingRequest.Type,
                 PositionName = trainingRequest.PositionName,
                 Description = trainingRequest.Description,

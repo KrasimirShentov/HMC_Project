@@ -16,8 +16,8 @@ namespace HMC_Project.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,9 +29,9 @@ namespace HMC_Project.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uuid", nullable: false),
-                    Type = table.Column<string>(type: "text", nullable: false),
-                    PositionName = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
+                    Type = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    PositionName = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     TrainingHours = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -44,10 +44,10 @@ namespace HMC_Project.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Surname = table.Column<string>(type: "text", nullable: false),
-                    UserName = table.Column<string>(type: "text", nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    Surname = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    UserName = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    Password = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -63,11 +63,11 @@ namespace HMC_Project.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    Type = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    Type = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     CompanyID = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -87,9 +87,8 @@ namespace HMC_Project.Migrations
                 {
                     ID = table.Column<Guid>(type: "uuid", nullable: false),
                     AddressName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    UserID = table.Column<Guid>(type: "uuid", nullable: false),
-                    CompanyID = table.Column<Guid>(type: "uuid", nullable: false),
-                    CompanyID1 = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserID = table.Column<Guid>(type: "uuid", nullable: true),
+                    CompanyID = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -101,17 +100,10 @@ namespace HMC_Project.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Addresses_Companies_CompanyID1",
-                        column: x => x.CompanyID1,
-                        principalTable: "Companies",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Addresses_Users_UserID",
                         column: x => x.UserID,
                         principalTable: "Users",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -119,18 +111,16 @@ namespace HMC_Project.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Surname = table.Column<string>(type: "text", nullable: false),
-                    Age = table.Column<int>(type: "integer", nullable: false),
+                    Name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    Surname = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    Age = table.Column<int>(type: "integer", maxLength: 32, nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
-                    Position = table.Column<string>(type: "text", nullable: false),
+                    Position = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
-                    TrainingId = table.Column<Guid>(type: "uuid", nullable: false),
                     DepartmentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TrainingID = table.Column<Guid>(type: "uuid", nullable: true),
                     Birthday = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    HireDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DepartmentId1 = table.Column<Guid>(type: "uuid", nullable: true),
-                    TrainingID = table.Column<Guid>(type: "uuid", nullable: true)
+                    HireDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -142,18 +132,8 @@ namespace HMC_Project.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Employees_Departments_DepartmentId1",
-                        column: x => x.DepartmentId1,
-                        principalTable: "Departments",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Employees_Training_TrainingID",
                         column: x => x.TrainingID,
-                        principalTable: "Training",
-                        principalColumn: "ID");
-                    table.ForeignKey(
-                        name: "FK_Employees_Training_TrainingId",
-                        column: x => x.TrainingId,
                         principalTable: "Training",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.SetNull);
@@ -184,7 +164,7 @@ namespace HMC_Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmployeeAddress",
+                name: "employeeAddresses",
                 columns: table => new
                 {
                     EmployeeID = table.Column<Guid>(type: "uuid", nullable: false),
@@ -192,15 +172,15 @@ namespace HMC_Project.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeeAddress", x => new { x.EmployeeID, x.AddressID });
+                    table.PrimaryKey("PK_employeeAddresses", x => new { x.EmployeeID, x.AddressID });
                     table.ForeignKey(
-                        name: "FK_EmployeeAddress_Addresses_AddressID",
+                        name: "FK_employeeAddresses_Addresses_AddressID",
                         column: x => x.AddressID,
                         principalTable: "Addresses",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EmployeeAddress_Employees_EmployeeID",
+                        name: "FK_employeeAddresses_Employees_EmployeeID",
                         column: x => x.EmployeeID,
                         principalTable: "Employees",
                         principalColumn: "ID",
@@ -211,11 +191,6 @@ namespace HMC_Project.Migrations
                 name: "IX_Addresses_CompanyID",
                 table: "Addresses",
                 column: "CompanyID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Addresses_CompanyID1",
-                table: "Addresses",
-                column: "CompanyID1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_UserID",
@@ -233,24 +208,14 @@ namespace HMC_Project.Migrations
                 column: "CompanyID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmployeeAddress_AddressID",
-                table: "EmployeeAddress",
+                name: "IX_employeeAddresses_AddressID",
+                table: "employeeAddresses",
                 column: "AddressID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_DepartmentId",
                 table: "Employees",
                 column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employees_DepartmentId1",
-                table: "Employees",
-                column: "DepartmentId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employees_TrainingId",
-                table: "Employees",
-                column: "TrainingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_TrainingID",
@@ -271,7 +236,7 @@ namespace HMC_Project.Migrations
                 name: "DepartmentAddresses");
 
             migrationBuilder.DropTable(
-                name: "EmployeeAddress");
+                name: "employeeAddresses");
 
             migrationBuilder.DropTable(
                 name: "Addresses");

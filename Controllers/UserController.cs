@@ -1,10 +1,11 @@
 ﻿using HMC_Project.Dtos;
 using HMC_Project.Interfaces.Services;
 using HMC_Project.Models;
+using HMC_Project.Requests;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HMC_Project.Controllers
@@ -14,12 +15,10 @@ namespace HMC_Project.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly HMCDbContext _dbContext;
 
-        public UserController(IUserService userService, HMCDbContext _dbcontext)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _dbContext = _dbcontext;
         }
 
         [HttpGet("{username}")]
@@ -30,19 +29,29 @@ namespace HMC_Project.Controllers
                 var user = await _userService.GetUserByUsernameAsync(username);
                 return Ok(user);
             }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, ex);
+                Console.WriteLine($"Error in GetByUsernameAsync: {ex.Message}");
+                return StatusCode(500, "An internal server error occurred.");
             }
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserRequest userRequest)
         {
+            if (string.IsNullOrEmpty(userRequest.UserName) || string.IsNullOrEmpty(userRequest.Password))
+            {
+                return BadRequest("Username and password are required.");
+            }
+
             var token = await _userService.AuthenticateAsync(userRequest.UserName, userRequest.Password);
             if (token == null)
             {
-                return Unauthorized();
+                return Unauthorized("Invalid username or password.");
             }
             return Ok(new { Token = token });
         }
@@ -55,30 +64,20 @@ namespace HMC_Project.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new User
+            try
             {
-                ID = Guid.NewGuid(),
-                Name = userDto.Name,
-                Surname = userDto.Surname,
-                UserName = userDto.UserName,
-                Password = userDto.Password,
-                Email = userDto.Email,
-                Gender = userDto.Gender,
-                DateOfBirth = userDto.DateOfBirth
-            };
-
-            _dbContext.Users.Add(user);
-            _dbContext.SaveChanges();
-
-            foreach (var addressDto in userDto.Addresses)
-            {
-                var address = new Address(addressDto.AddressName/*, user.ID*/);
-                _dbContext.Addresses.Add(address);
+                var newUser = await _userService.RegisterUserWithAddressesAsync(userDto);
+                return Ok(new { newUser.ID, newUser.Name });
             }
-
-            _dbContext.SaveChanges();
-
-            return Ok(new { user.ID, user.Name });
+            catch (ArgumentException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during user registration: {ex.Message}");
+                return StatusCode(500, "An error occurred during registration.");
+            }
         }
 
         [HttpDelete("{ID}")]
@@ -89,9 +88,14 @@ namespace HMC_Project.Controllers
                 await _userService.DeleteUserAsync(ID);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
+            catch (KeyNotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting user: {ex.Message}");
+                return StatusCode(500, "An error occurred while deleting the user.");
             }
         }
     }

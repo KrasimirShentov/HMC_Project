@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HMC_Project.Migrations
 {
     [DbContext(typeof(HMCDbContext))]
-    [Migration("20241123211536_Annotations")]
-    partial class Annotations
+    [Migration("20250527121348_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,10 +36,10 @@ namespace HMC_Project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<Guid>("CompanyID")
+                    b.Property<Guid?>("CompanyID")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserID")
+                    b.Property<Guid?>("UserID")
                         .HasColumnType("uuid");
 
                     b.HasKey("ID");
@@ -143,9 +143,6 @@ namespace HMC_Project.Migrations
                     b.Property<Guid>("DepartmentId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("DepartmentId1")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
@@ -174,18 +171,11 @@ namespace HMC_Project.Migrations
                     b.Property<Guid?>("TrainingID")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("TrainingId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("ID");
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("DepartmentId1");
-
                     b.HasIndex("TrainingID");
-
-                    b.HasIndex("TrainingId");
 
                     b.ToTable("Employees");
                 });
@@ -202,7 +192,7 @@ namespace HMC_Project.Migrations
 
                     b.HasIndex("AddressID");
 
-                    b.ToTable("EmployeeAddress");
+                    b.ToTable("employeeAddresses");
                 });
 
             modelBuilder.Entity("HMC_Project.Models.Training", b =>
@@ -260,8 +250,8 @@ namespace HMC_Project.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(24)
-                        .HasColumnType("character varying(24)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -286,14 +276,11 @@ namespace HMC_Project.Migrations
                     b.HasOne("HMC_Project.Models.Company", "Company")
                         .WithMany("Addresses")
                         .HasForeignKey("CompanyID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HMC_Project.Models.User", "User")
                         .WithMany("Addresses")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserID");
 
                     b.Navigation("Company");
 
@@ -333,24 +320,15 @@ namespace HMC_Project.Migrations
             modelBuilder.Entity("HMC_Project.Models.Employee", b =>
                 {
                     b.HasOne("HMC_Project.Models.Department", "Department")
-                        .WithMany()
+                        .WithMany("employees")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HMC_Project.Models.Department", null)
-                        .WithMany("employees")
-                        .HasForeignKey("DepartmentId1");
-
-                    b.HasOne("HMC_Project.Models.Training", null)
-                        .WithMany("Employees")
-                        .HasForeignKey("TrainingID");
-
                     b.HasOne("HMC_Project.Models.Training", "Training")
-                        .WithMany()
-                        .HasForeignKey("TrainingId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .WithMany("Employees")
+                        .HasForeignKey("TrainingID")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Department");
 

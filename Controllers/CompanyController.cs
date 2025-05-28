@@ -10,7 +10,7 @@ namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class CompanyController : Controller
     {
         private readonly ICompanyInterface _companyService;

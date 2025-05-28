@@ -20,7 +20,7 @@ namespace HMC_Project.Models
         [Required, MaxLength(32)]
         public string UserName { get; set; }
 
-        [Required, MaxLength(24)]
+        [Required, MaxLength(100)]
         public string Password { get; set; }
 
         [Required, EmailAddress]

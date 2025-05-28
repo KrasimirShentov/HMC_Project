@@ -7,7 +7,7 @@ namespace HMC_Project.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class DepartmentController : Controller
     {
         private readonly IDepartmentInterface _departmentService;
@@ -23,6 +23,10 @@ namespace HMC_Project.Controllers
             try
             {
                 var department = await _departmentService.GetByIDAsync(ID);
+                if (department == null)
+                {
+                    return NotFound(); // Return 404 if not found
+                }
                 return Ok(department);
             }
             catch (Exception ex)
@@ -46,24 +50,30 @@ namespace HMC_Project.Controllers
         }
 
         [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] DepartmentRequest _departmentRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                await _departmentService.CreateAsync(_departmentRequest);
-                return Ok(_departmentRequest);
+                var newDepartment = await _departmentService.CreateAsync(_departmentRequest);
+                return CreatedAtAction(nameof(GetByID), new { ID = newDepartment.Id }, newDepartment);
             }
             catch (ArgumentException ex)
             {
-                return Forbid(ex.Message);
+                return Conflict(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                return Conflict(ex.Message);
+                return BadRequest(ex.Message); 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, $"An internal server error occurred: {ex.Message}");
             }
         }
 

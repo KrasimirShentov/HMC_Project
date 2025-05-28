@@ -60,14 +60,11 @@ namespace HMC_Project.Repositories
                     PositionName = t.PositionName,
                     Description = t.Description,
                     TrainingHours = t.TrainingHours,
-                    Employees = t.Employees
-                    .Select(e => new EmployeeDTO
+                    Employees = t.Employees.Select(e => new EmployeeDTO
                     {
-                        Id = e.ID,
+                        //Id = e.ID,
                         Name = e.Name,
                         Surname = e.Surname,
-                        Email = e.Email,
-                        Position = e.Position
                     }).ToList()
                 })
                 .ToListAsync();
