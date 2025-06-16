@@ -67,7 +67,18 @@ namespace HMC_Project.Controllers
             try
             {
                 var newUser = await _userService.RegisterUserWithAddressesAsync(userDto);
-                return Ok(new { newUser.ID, newUser.Name });
+                if (newUser == null)
+                {
+                    return StatusCode(500, "User could not be created.");
+                }
+
+                var token = await _userService.AuthenticateAsync(userDto.UserName, userDto.Password);
+                if (token == null)
+                {
+                    return StatusCode(500, "Failed to authenticate user after registration.");
+                }
+
+                return Ok(new { Token = token });
             }
             catch (ArgumentException ex)
             {

@@ -10,6 +10,22 @@ export interface Address {
     addressName: string;
 }
 
+export interface LoginCredentials {
+  userName: string;
+  password: string;
+}
+
+export interface RegisterCredentials {
+  name: string;
+  surname: string;
+  userName: string;
+  email: string;
+  password: string;
+  gender: GenderType;
+  dateOfBirth: string;
+  addresses: Address[];
+}
+
 export interface User {
     id: string;
     name: string;
@@ -79,7 +95,7 @@ export interface DepartmentRequest {
     companyId: string;
     addresses?: Address[];
     employees?: Employee[];
-    DepartmentAddresses?: Address[]; // ADD THIS LINE
+    DepartmentAddresses?: Address[];
 
 }
 
@@ -117,6 +133,40 @@ export interface EmployeeRequest {
     position: string;
     gender: GenderType;
     departmentId: string;
-    trainingId?: string; // Make it optional if the backend allows null
-    
+    trainingId?: string;
+}
+
+export interface CompanyUpdateDto {
+    name: string;
+    description: string;
+    email: string;
+    phoneNumber: string;
+}
+
+export interface DepartmentUpdateDto {
+    name: string;
+    description: string;
+    email: string;
+    phoneNumber: string;
+    type: string;
+    companyId: string;
+}
+
+export interface EmployeeUpdateDto {
+    firstName: string;
+    lastName: string;
+    age: number;
+    email: string;
+    position: string;
+    gender: GenderType;
+    departmentId: string;
+    trainingDetailsId?: string | null; 
+}
+
+export interface FoundEmployeeResult {
+    firstName: string;
+    lastName: string;
+    email: string;
+    position: string;
+    departmentName: string;
 }

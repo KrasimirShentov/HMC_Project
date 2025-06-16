@@ -1,10 +1,9 @@
-// src/components/CompanyList.tsx
 import React, { useEffect, useState, useCallback } from 'react';
 import api from '../services/api';
 import { Company } from '../types/Types';
 import CompanyCreate from './CompanyCreate';
 import styles from './CSSComponents/CompanyList.module.css';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
 
 const CompanyList: React.FC = () => {
     const [companies, setCompanies] = useState<Company[]>([]);

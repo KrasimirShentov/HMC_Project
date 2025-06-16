@@ -1,48 +1,82 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import api from '../services/api'; // Your Axios instance
+// src/context/AuthContext.tsx
 
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api'; // Assuming you have a pre-configured Axios instance
+import { LoginCredentials, RegisterCredentials } from '../types/Types'; // Make sure these types are defined
+
+// Define the shape of the context value
 interface AuthContextType {
-  token: string | null;
   isLoggedIn: boolean;
-  login: (token: string) => void;
+  login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
+  register: (credentials: RegisterCredentials) => Promise<void>; // The new register function
 }
 
+// Create the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('jwtToken'));
-
-  useEffect(() => {
+// Create the AuthProvider component
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    const token = localStorage.getItem('token');
+    // If a token exists, set the default authorization header for all subsequent API requests
     if (token) {
-      localStorage.setItem('jwtToken', token);
-      // Set the default Authorization header for all future requests using your api instance
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
-      localStorage.removeItem('jwtToken');
-      // Remove the Authorization header if no token is present
-      delete api.defaults.headers.common['Authorization'];
     }
-  }, [token]); // Re-run this effect whenever the token changes
+    return !!token;
+  });
+  const navigate = useNavigate();
 
-  const login = (newToken: string) => {
-    setToken(newToken);
+  // A helper function to handle successful authentication
+  const handleAuthentication = (token: string) => {
+    localStorage.setItem('token', token);
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    setIsLoggedIn(true);
+    navigate('/companies'); // Redirect to a protected page
   };
 
+  // Login function
+  const login = async (credentials: LoginCredentials) => {
+    const response = await api.post('/user/login', credentials);
+    const { token } = response.data;
+    if (token) {
+      handleAuthentication(token);
+    } else {
+      throw new Error("Login failed: No token received.");
+    }
+  };
+  
+  // NEW Register function
+  const register = async (credentials: RegisterCredentials) => {
+    // The backend now returns a token on successful registration
+    const response = await api.post('/user/register', credentials);
+    const { token } = response.data;
+    if (token) {
+      handleAuthentication(token);
+    } else {
+      throw new Error("Registration failed: No token received.");
+    }
+  };
+
+  // Logout function
   const logout = () => {
-    setToken(null);
+    localStorage.removeItem('token');
+    delete api.defaults.headers.common['Authorization'];
+    setIsLoggedIn(false);
+    navigate('/login'); // Redirect to login on logout
   };
 
-  const isLoggedIn = !!token; // True if token is not null or empty string
+  const value = { isLoggedIn, login, logout, register };
 
   return (
-    <AuthContext.Provider value={{ token, isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook to consume the AuthContext
+// Custom hook to use the auth context easily in other components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
