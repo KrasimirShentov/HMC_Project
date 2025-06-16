@@ -1,86 +1,114 @@
-// src/context/AuthContext.tsx
-
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api'; // Assuming you have a pre-configured Axios instance
-import { LoginCredentials, RegisterCredentials } from '../types/Types'; // Make sure these types are defined
+import api from '../services/api';
+import { LoginCredentials, RegisterCredentials, GenderType } from '../types/Types';
+import axios from 'axios';
 
-// Define the shape of the context value
 interface AuthContextType {
-  isLoggedIn: boolean;
-  login: (credentials: LoginCredentials) => Promise<void>;
-  logout: () => void;
-  register: (credentials: RegisterCredentials) => Promise<void>; // The new register function
+    isLoggedIn: boolean;
+    login: (credentials: LoginCredentials) => Promise<void>;
+    logout: () => void;
+    register: (credentials: RegisterCredentials) => Promise<void>;
 }
 
-// Create the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Create the AuthProvider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    const token = localStorage.getItem('token');
-    // If a token exists, set the default authorization header for all subsequent API requests
-    if (token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, []);
+
+    const handleAuthentication = useCallback((token: string) => {
+        localStorage.setItem('token', token);
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        setIsLoggedIn(true);
+        navigate('/companies');
+    }, [navigate]);
+
+    const login = useCallback(async (credentials: LoginCredentials) => {
+    console.log("AuthContext.tsx login received credentials:", credentials);
+    try {
+      const response = await api.post('/user/login', credentials);
+
+        console.log("Sending Login Payload:", credentials); 
+        const { token } = response.data;
+        if (token) {
+            handleAuthentication(token);
+        } else {
+                throw new Error("Login failed: No token received from server.");
+        }
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            const errorMessage = error.response?.data?.title || error.response?.data?.message || JSON.stringify(error.response?.data) || error.message;
+            console.error("Login API Error:", error.response?.data || error.message);
+            throw new Error(`Login failed: ${JSON.stringify(errorMessage)}`);
+        } else {
+            console.error("An unexpected error occurred during login:", error);
+            throw new Error("An unexpected error occurred during login.");
+        }
     }
-    return !!token;
-  });
-  const navigate = useNavigate();
+}, [handleAuthentication]);
 
-  // A helper function to handle successful authentication
-  const handleAuthentication = (token: string) => {
-    localStorage.setItem('token', token);
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setIsLoggedIn(true);
-    navigate('/companies'); // Redirect to a protected page
-  };
+    const register = useCallback(async (credentials: RegisterCredentials) => {
+        try {
+            const response = await api.post('/user/register', credentials);
 
-  // Login function
-  const login = async (credentials: LoginCredentials) => {
-    const response = await api.post('/user/login', credentials);
-    const { token } = response.data;
-    if (token) {
-      handleAuthentication(token);
-    } else {
-      throw new Error("Login failed: No token received.");
-    }
-  };
-  
-  // NEW Register function
-  const register = async (credentials: RegisterCredentials) => {
-    // The backend now returns a token on successful registration
-    const response = await api.post('/user/register', credentials);
-    const { token } = response.data;
-    if (token) {
-      handleAuthentication(token);
-    } else {
-      throw new Error("Registration failed: No token received.");
-    }
-  };
+            const { token } = response.data;
+            if (token) {
+                handleAuthentication(token);
+            } else {
+                throw new Error("Registration failed: No token received from server.");
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error("Registration API Error:", error.response?.data || error.message);
+                if (error.response && error.response.data) {
+                    throw error.response.data;
+                } else {
+                    throw new Error(error.message);
+                }
+            } else {
+                console.error("An unexpected error occurred during registration:", error);
+                throw new Error("An unexpected error occurred during registration.");
+            }
+        }
+    }, [handleAuthentication]);
 
-  // Logout function
-  const logout = () => {
-    localStorage.removeItem('token');
-    delete api.defaults.headers.common['Authorization'];
-    setIsLoggedIn(false);
-    navigate('/login'); // Redirect to login on logout
-  };
+    const logout = useCallback(() => {
+        localStorage.removeItem('token');
+        delete api.defaults.headers.common['Authorization'];
+        setIsLoggedIn(false);
+        navigate('/login');
+    }, [navigate]);
 
-  const value = { isLoggedIn, login, logout, register };
+    const value = useMemo(() => ({
+        isLoggedIn,
+        login,
+        logout,
+        register
+    }), [isLoggedIn, login, logout, register]);
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
-// Custom hook to use the auth context easily in other components
+// Export your useAuth hook as a named export
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+    const context = useContext(AuthContext);
+    if (context === undefined) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
 };

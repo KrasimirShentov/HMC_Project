@@ -63,15 +63,12 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
 
-          {/* Protected Routes Group */}
-          {/* Companies List */}
           <Route path="/companies" element={
             <ProtectedRoute>
               <CompanyList />
             </ProtectedRoute>
           } />
 
-          {/* Company Detail (includes its departments by default) */}
           <Route path="/companies/:companyId" element={
             <ProtectedRoute>
               <CompanyDetail />

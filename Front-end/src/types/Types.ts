@@ -3,27 +3,28 @@
 export enum GenderType {
     Male = 'Male',
     Female = 'Female',
-    Other = 'Other',
+    Ryan_Reynolds = 'Ryan_Reynolds',
 }
 
 export interface Address {
-    addressName: string;
-}
-
-export interface LoginCredentials {
-  userName: string;
-  password: string;
+    addressName: string; // FIX: Changed to camelCase
+    // Add other address properties here if your backend AddressDTO has them, in camelCase
 }
 
 export interface RegisterCredentials {
-  name: string;
-  surname: string;
-  userName: string;
-  email: string;
-  password: string;
-  gender: GenderType;
-  dateOfBirth: string;
-  addresses: Address[];
+    userName: string;    
+    email: string;       
+    password: string;    
+    name: string;        
+    surname: string;     
+    gender: GenderType;
+    dateOfBirth: string; 
+    addresses: Address[];
+}
+
+export interface LoginCredentials {
+    userName: string;
+    password: string;
 }
 
 export interface User {

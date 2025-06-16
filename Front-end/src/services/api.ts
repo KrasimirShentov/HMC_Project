@@ -2,7 +2,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000", // <-- THIS MUST BE 5000, NOT 5027
+  baseURL: 'http://localhost:5000',
+  headers: {
+    'Content-Type': 'application/json', // <--- Add this line
+  },
 });
 
 export default api;queueMicrotask
